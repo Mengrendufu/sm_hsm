@@ -76,7 +76,7 @@ void SM_Hsm_dispatch_(
         } else if (ret == SM_RET_HANDLED) {
             return;
         }
-        s = s->super;
+        s = s->super;  /* ret == SM_RET_SUPER */
     }
 }
 /*..........................................................................*/
@@ -165,10 +165,14 @@ void SM_Hsm_initDrill_(SM_Hsm * const me) SM_HSM_RETT {
 
     while (me->curr->init_ != (SM_InitHandler)0) {
         SM_StatePtr path[SM_MAX_NEST_DEPTH];
-        signed char ip = -1;
+        signed char ip;
         SM_StatePtr s;
         signed char i;
-        SM_StatePtr target = me->curr->init_(me);
+        SM_StatePtr target;
+
+        ip = -1;
+
+        target = me->curr->init_(me);
 
         SM_ENSURE(target != (SM_StatePtr)0);
 

@@ -159,24 +159,25 @@ typedef void (*VC_Handler)(void * const me, void const * const e) SM_HSM_RETT;
 void SM_Hsm_init_(SM_Hsm * const me, SM_InitHandler initial_) SM_HSM_RETT;
 
 /**
- * @brief
+ * @brief Perform the UML HSM event processing of the HSM.
  *
  * @param[in] me Pointer of a state machine.
  *
- * @param[in] e
+ * @param[in] e Current input event, can not be NULL.
  */
 void SM_Hsm_dispatch_(
     SM_Hsm * const me,
     SM_HSM_EVT_TYPE const * const e) SM_HSM_RETT;
 
 /**
- * @brief
+ * @brief Perform the transition when the HSM is turned to another state
+ *        by the input event.
  *
- * @param[in] me
+ * @param[in] me Pointer of a state machine.
  *
- * @param[in] source
+ * @param[in] source Real source of transition.
  *
- * @param[in] target
+ * @param[in] target Target of this transition.
  */
 void SM_Hsm_transition_(
     SM_Hsm * const me,
@@ -184,13 +185,10 @@ void SM_Hsm_transition_(
     SM_StatePtr target) SM_HSM_RETT;
 
 /**
- * @brief
+ * @brief Perfrom the UML init action if it ever exists.
  *
- * @param[in] me
+ * @param[in] me The target state of a transition.
  */
 void SM_Hsm_initDrill_(SM_Hsm * const me) SM_HSM_RETT;
-
-/*==========================================================================*/
-void SmHsmTst_test(void);
 
 #endif  /* SM_HSM_H_ */
