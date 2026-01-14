@@ -23,9 +23,9 @@ SM_DEFINE_MODULE("sm_hsm")
 /*..........................................................................*/
 void SM_Hsm_init_(SM_Hsm * const me, SM_InitHandler initial_) SM_HSM_RETT {
     SM_StatePtr path[SM_MAX_NEST_DEPTH];
-    signed char ip;
     SM_StatePtr s;
     SM_StatePtr target;
+    signed char ip;
 
     SM_REQUIRE(me != (SM_Hsm *)0);
     SM_REQUIRE(initial_ != (SM_InitHandler)0);
@@ -77,6 +77,7 @@ void SM_Hsm_dispatch_(
             return;
         }
         s = s->super;  /* ret == SM_RET_SUPER */
+        s = s->super;  /* ret == SM_RET_SUPER */
     }
 }
 /*..........................................................................*/
@@ -86,8 +87,8 @@ void SM_Hsm_transition_(
     SM_StatePtr target) SM_HSM_RETT
 {
     SM_StatePtr path[SM_MAX_NEST_DEPTH];
-    signed char ip;
     SM_StatePtr s;
+    signed char ip;
     signed char i;
     bool bReachedSource;
 
@@ -165,10 +166,10 @@ void SM_Hsm_initDrill_(SM_Hsm * const me) SM_HSM_RETT {
 
     while (me->curr->init_ != (SM_InitHandler)0) {
         SM_StatePtr path[SM_MAX_NEST_DEPTH];
-        signed char ip;
         SM_StatePtr s;
-        signed char i;
         SM_StatePtr target;
+        signed char i;
+        signed char ip;
 
         ip = -1;
 
