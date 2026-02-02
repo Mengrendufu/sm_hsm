@@ -1,37 +1,33 @@
-/*****************************************************************************
- * Copyright (C) 2026 Sunny Matato
- *
- * This program is free software. It comes without any warranty, to
- * the extent permitted by applicable law. You can redistribute it
- * and/or modify it under the terms of the Do What The Fuck You Want
- * To Public License, Version 2, as published by Sam Hocevar.
- * See http://www.wtfpl.net/ for more details.
- ****************************************************************************/
+//============================================================================
+// Copyright (C) 2026 Sunny Matato
+//
+// This program is free software. It comes without any warranty, to
+// the extent permitted by applicable law. You can redistribute it
+// and/or modify it under the terms of the Do What The Fuck You Want
+// To Public License, Version 2, as published by Sam Hocevar.
+// See http://www.wtfpl.net/ for more details.
+//============================================================================
 #ifndef SM_HSM_H_
 #define SM_HSM_H_
 
-/**
- * @defgroup Read-Only key code and function reentrant key code.
- *
- * @brief Typically, if you use 8051, you might do this:
- *                                               #define SM_HSM_ROM const code
- *                                               #define SM_HSM_RETT reentrant
- *
- *                   if you use Cortex-M3, you might do this:
- *                                               #define SM_HSM_ROM const
- *                                               #define SM_HSM_RETT
- * @{
- */
+//============================================================================
+//! @brief Typically, if you use 8051, you might do this:
+//                        #define SM_HSM_ROM const code
+//                        #define SM_HSM_RETT reentrant
+//                    if you use Cortex-M3, you might do this:
+//                        #define SM_HSM_ROM const
+//                        #define SM_HSM_RETT
+//! @cond INTERNAL
 
 #ifndef SM_HSM_ROM
-#define SM_HSM_ROM const
-#endif  /* SM_HSM_ROM */
+    #define SM_HSM_ROM const
+#endif // SM_HSM_ROM
 
 #ifndef SM_HSM_RETT
-#define SM_HSM_RETT
-#endif  /* SM_HSM_RETT */
+    #define SM_HSM_RETT
+#endif // SM_HSM_RETT
 
-/** @} */
+//! @endcond
 
 /**
  * @defgroup Event types that the event dispatcher needs.
@@ -44,59 +40,59 @@
  * @{
  */
 
+//............................................................................
+//! @brief Event types that the event dispatcher needs.
+//         You might define it when porting or use the default.
+//         Need micros: SM_HSM_EVT_TYPE
+//             SM_HSM_SIGNAL
+//             SM_HSM_EVT_SIG(evt_)
+//! @cond INTERNAL
+
 #ifndef SM_HSM_SIGNAL
-typedef unsigned char SM_Hsm_Signal;
-#define SM_HSM_SIGNAL SM_Hsm_Signal
-#endif  /* SM_HSM_SIGNAL */
+    typedef unsigned char SM_Hsm_Signal;
+    #define SM_HSM_SIGNAL SM_Hsm_Signal
+#endif // SM_HSM_SIGNAL
 
 #ifndef SM_HSM_EVT_TYPE
+//! @class SM_HsmEvt
 typedef struct {
-    SM_HSM_SIGNAL sig;
+    SM_HSM_SIGNAL sig; //!< @private @memberof SM_HsmEvt
 } SM_HsmEvt;
 #define SM_HSM_EVT_TYPE SM_HsmEvt
 #define SM_HSM_EVT_SIG(evt_)  ((evt_)->sig)
-#endif  /* SM_HSM_EVT_TYPE */
+#endif // SM_HSM_EVT_TYPE
 
-/** @} */
+//! @endcond
 
-/**
- * @defgroup Event processing return.
- *
- * @{
- */
+//............................................................................
+//! @brief Event processing return.
+//! @cond INTERNAL
 
 typedef unsigned char SM_RetState;
 #define SM_RET_HANDLED 0
-#define SM_RET_SUPER   1
-#define SM_RET_TRAN    2
+#define SM_RET_TRAN    1
+#define SM_RET_SUPER   2
 
 #define _SM_HANDLED()      (SM_RET_HANDLED)
 #define _SM_SUPER()        (SM_RET_SUPER)
-#define _SM_TRAN(target_)                                               \
-                                (SM_HSM_CAST(me)->next = (target_),     \
-                                    SM_RET_TRAN)  /* return this */
-#define _SM_INIT(target_)  (target_)
+#define _SM_TRAN(target_) (SM_HSM_CAST(me)->next = (target_), SM_RET_TRAN)
+#define _SM_INIT(target_)  (target_) // TOP-INIT && STATE-INIT
 
-/** @} */
+//! @endcond
 
-/**
- * @defgroup Hsm State pointer.
- *
- * @note Expand to struct SM_HsmState SM_HSM_ROM * in application.
- *
- * @{
- */
+//............................................................................
+//! @brief Hsm State pointer.
+//! @note Expand to struct SM_HsmState SM_HSM_ROM * in application.
+//! @cond INTERNAL
 
 struct SM_HsmState;
 typedef struct SM_HsmState SM_HSM_ROM * SM_StatePtr;
 
-/** @} */
+//! @endcond
 
-/**
- * @defgroup UML Top-Initial handler, Entry/Exit handler, nomal state handler.
- *
- * @{
- */
+//............................................................................
+//! @brief UML Top-Initial handler, Entry/Exit handler, nomal state handler.
+//! @cond INTERNAL
 
 typedef SM_StatePtr (*SM_InitHandler)(void * const me) SM_HSM_RETT;
 typedef void (*SM_ActionHandler)(void * const me) SM_HSM_RETT;
@@ -104,91 +100,57 @@ typedef
 SM_RetState
 (*SM_StateHandler)(void * const me, void const * const e) SM_HSM_RETT;
 
-/** @} */
+//! @endcond
 
-/**
- * @defgroup HSM struct.
- *
- * @note SM_StatePtr is always in **ROM**.
- *
- *       When you put HSM into another framework as an normal attr
- *       (not super under single heritance syntax), SM_HSM_CAST will help.
- *       You can define the SM_HSM_CAST somewhere to specify how to get the
- *       SM_Hsm * from me pointer passed to virtual pointer.
- *
- * @{
- */
-
+//............................................................................
+//! @class SM_HsmState
+//! @extends struct SM_StatePtr
 typedef struct SM_HsmState {
-    SM_StatePtr super;
-    SM_InitHandler init_;
-    SM_ActionHandler entry_;
-    SM_ActionHandler exit_;
-    SM_StateHandler handler_;
+    SM_StatePtr super;         //!< @private @memberof SM_HsmState
+    SM_InitHandler init_;      //!< @private @memberof SM_HsmState
+    SM_ActionHandler entry_;   //!< @private @memberof SM_HsmState
+    SM_ActionHandler exit_;    //!< @private @memberof SM_HsmState
+    SM_StateHandler handler_;  //!< @private @memberof SM_HsmState
 } SM_HsmState;
 
+//............................................................................
+//! @class SM_Hsm
+//! @extends SM_HsmState
 typedef struct SM_Hsm {
-    SM_StatePtr curr;                                     /*! current state */
-    SM_StatePtr next;               /*! target state when transition occurs */
+    SM_StatePtr curr; //!< @private @memberof SM_Hsm
+    SM_StatePtr next; //!< @private @memberof SM_Hsm
 } SM_Hsm;
 
 #ifndef SM_HSM_CAST
-#define SM_HSM_CAST(me_)  ((SM_Hsm *)(me_))
-#endif  /* SM_HSM_CAST */
+    #define SM_HSM_CAST(me_)  ((SM_Hsm *)(me_))
+#endif // SM_HSM_CAST
 
-/** @} */
+//............................................................................
+// Deepest nest level for HSM, TOP state exclude
+#ifndef SM_MAX_NEST_DEPTH_
+    #define SM_MAX_NEST_DEPTH_ 5
+#endif // SM_MAX_NEST_DEPTH_
 
-/**
- * @defgroup Virtual pointer of SM_Hsm_init_ and SM_Hsm_dispatch_
- *
- * @{
- */
-
+//! @brief Virtual pointer of SM_Hsm_init_ and SM_Hsm_dispatch_.
+//! @cond INTERNAL
 typedef void (*VC_Handler)(void * const me, void const * const e) SM_HSM_RETT;
+//! @endcond
 
-/** @} */
-
-/**
- * @brief Perform the UML TOP-INIT action of Hierarchical State Machine.
- *
- * @param[in] me HSM instance.
- *
- * @param[in] initial_ TOP-INIT transition handler, inside it should plicitly
- *                     execute the initial transition.
- */
+//============================================================================
+//! @static @public @memberof SM_Hsm
 void SM_Hsm_init_(SM_Hsm * const me, SM_InitHandler initial_) SM_HSM_RETT;
 
-/**
- * @brief Perform the UML HSM event processing of the HSM.
- *
- * @param[in] me Pointer of a state machine.
- *
- * @param[in] e Current input event, can not be NULL.
- */
-void SM_Hsm_dispatch_(
-    SM_Hsm * const me,
-    SM_HSM_EVT_TYPE const * const e) SM_HSM_RETT;
+//! @static @public @memberof SM_Hsm
+void SM_Hsm_dispatch_(SM_Hsm * const me,
+                      SM_HSM_EVT_TYPE const * const e) SM_HSM_RETT;
 
-/**
- * @brief Perform the transition when the HSM is turned to another state
- *        by the input event.
- *
- * @param[in] me Pointer of a state machine.
- *
- * @param[in] source Real source of transition.
- *
- * @param[in] target Target of this transition.
- */
-void SM_Hsm_transition_(
-    SM_Hsm * const me,
-    SM_StatePtr source,
-    SM_StatePtr target) SM_HSM_RETT;
+//! @static @public @memberof SM_Hsm
+void SM_Hsm_transition_(SM_Hsm * const me,
+                        SM_StatePtr source,
+                        SM_StatePtr target) SM_HSM_RETT;
 
-/**
- * @brief Perfrom the UML init action if it ever exists.
- *
- * @param[in] me The target state of a transition.
- */
-void SM_Hsm_initDrill_(SM_Hsm * const me) SM_HSM_RETT;
+//! @static @public @memberof SM_Hsm
+void SM_Hsm_initDrill_(SM_Hsm * const me,
+                       SM_StatePtr * const path) SM_HSM_RETT;
 
-#endif  /* SM_HSM_H_ */
+#endif // SM_HSM_H_
