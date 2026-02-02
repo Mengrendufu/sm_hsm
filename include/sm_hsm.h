@@ -94,11 +94,10 @@ typedef struct SM_HsmState SM_HSM_ROM * SM_StatePtr;
 //! @brief UML Top-Initial handler, Entry/Exit handler, nomal state handler.
 //! @cond INTERNAL
 
-typedef SM_StatePtr (*SM_InitHandler)(void * const me) SM_HSM_RETT;
-typedef void (*SM_ActionHandler)(void * const me) SM_HSM_RETT;
-typedef
-SM_RetState
-(*SM_StateHandler)(void * const me, void const * const e) SM_HSM_RETT;
+typedef SM_StatePtr (*SM_InitHandler)  (void * const me) SM_HSM_RETT;
+typedef void        (*SM_ActionHandler)(void * const me) SM_HSM_RETT;
+typedef SM_RetState (*SM_StateHandler) (void * const me,
+                                        void const * const e) SM_HSM_RETT;
 
 //! @endcond
 
