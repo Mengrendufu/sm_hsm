@@ -95,7 +95,7 @@ void SM_Tracer_idle(SM_Tracer *me);
 
 //! @endcond
 
-//============================================================================
+// BSP =======================================================================
 //! @public @memberof SM_Tracer
 void SM_Tracer_flush_byte_(unsigned char byte_);
 

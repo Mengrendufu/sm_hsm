@@ -7,9 +7,7 @@
 // To Public License, Version 2, as published by Sam Hocevar.
 // See http://www.wtfpl.net/ for more details.
 //============================================================================
-#include <stdio.h>
-#include <stdbool.h>
-#include <stdint.h>
+#include "sm_port.h"
 #include "sm_assert.h"
 #include "sm_hsm.h"
 
@@ -23,11 +21,12 @@ void SM_Hsm_init_(SM_Hsm * const me, SM_InitHandler initial_) SM_HSM_RETT {
     SM_StatePtr s;
     SM_StatePtr target;
     signed char ip;
+    signed char i;
 
     SM_REQUIRE(me != (SM_Hsm *)0);
     SM_REQUIRE(initial_ != (SM_InitHandler)0);
 
-    target = (*initial_)(me);
+    target = (*((SM_InitHandler)(initial_)))(me);
     SM_ENSURE(target != (SM_StatePtr)0);
 
     ip = -1;
@@ -35,50 +34,57 @@ void SM_Hsm_init_(SM_Hsm * const me, SM_InitHandler initial_) SM_HSM_RETT {
     while (s != (SM_StatePtr)0) {
         SM_REQUIRE(ip < (SM_MAX_NEST_DEPTH_ - 1));
         path[++ip] = s;
-        s = s->super;
+        s = ((SM_StatePtr)s)->super;
     }
 
     while (ip >= 0) {
-        if (path[ip]->entry_) path[ip]->entry_(me);
+        s = (SM_StatePtr)(path[ip]);
+        if (s->entry_) (*s->entry_)(me);
         --ip;
     }
 
     me->curr = target;
     me->next = (SM_StatePtr)0;
 
-    SM_Hsm_initDrill_(me, path);
+    while (((SM_StatePtr)(me->curr))->init_ != (SM_InitHandler)0) {
+        target = (*(((SM_StatePtr)(me->curr))->init_))(me);
+        SM_ENSURE(target != (SM_StatePtr)0);
+        ip = -1;
+        s = target;
+        while (s != (SM_StatePtr)0 && s != me->curr) {
+            SM_REQUIRE(ip < (SM_MAX_NEST_DEPTH_ - 1));
+            path[++ip] = s;
+            s = ((SM_StatePtr)s)->super;
+        }
+        for (i = ip; i >= 0; --i) {
+            s = (SM_StatePtr)(path[i]);
+            me->curr = s;
+            if (s->entry_) (*s->entry_)(me);
+        }
+    }
 }
 
 //............................................................................
 //! @private @memberof SM_Hsm
 void SM_Hsm_dispatch_(SM_Hsm * const me,
-                      SM_HSM_EVT_TYPE const * const e) SM_HSM_RETT
+                      void const * const e) SM_HSM_RETT
 {
     SM_StatePtr s;
     SM_RetState ret;
 
     SM_REQUIRE(me != (SM_Hsm *)0);
-    SM_REQUIRE(e != (SM_HSM_EVT_TYPE *)0);
+    SM_REQUIRE(e != (void *)0);
 
     s = me->curr;
 
     SM_REQUIRE(s != (SM_StatePtr)0);
     while (s != (SM_StatePtr)0) {
-        ret = s->handler_(me, e);
+        ret = (*(((SM_StatePtr)(s))->handler_))(me, e);
         switch (ret) {
-            case SM_RET_TRAN: {
-                return SM_Hsm_transition_(me, s, me->next);
-            }
-            case SM_RET_HANDLED: {
-                return;
-            }
-            case SM_RET_SUPER: {
-                s = s->super;
-                break;
-            }
-            default: {
-                SM_ERROR("Whip.");
-            }
+            case SM_RET_HANDLED: return;
+            case SM_RET_SUPER:   s = ((SM_StatePtr)(s))->super; break;
+            case SM_RET_TRAN:    SM_Hsm_transition_(me, s, me->next); return;
+            default:             SM_ERROR("Whip."); break;
         }
     }
 }
@@ -94,10 +100,11 @@ void SM_Hsm_transition_(SM_Hsm * const me,
     signed char ip;
     signed char i;
     bool bReachedSource;
+    bool LCAFound;
 
     SM_REQUIRE(me != (SM_Hsm *)0);
-    SM_REQUIRE(source != (SM_StatePtr)0);
-    SM_REQUIRE(target != (SM_StatePtr)0);
+    SM_REQUIRE((SM_StatePtr)(source) != (SM_StatePtr)0);
+    SM_REQUIRE((SM_StatePtr)(target) != (SM_StatePtr)0);
 
     // ENTRY path.
     ip = -1;
@@ -105,68 +112,63 @@ void SM_Hsm_transition_(SM_Hsm * const me,
     while (s != (SM_StatePtr)0) {
         SM_REQUIRE(ip < (SM_MAX_NEST_DEPTH_ - 1));
         path[++ip] = s;
-        s = s->super;
+        s = ((SM_StatePtr)(s))->super;
     }
 
     i = 0;
     bReachedSource = false;
+    LCAFound = false;
     s = me->curr;
     while (s != (SM_StatePtr)0) {
         if (s == source) bReachedSource = true;
         if (bReachedSource) {
             if (!((s == source) && (target == source))) { // Not self-tran.
                 for (i = 0; i <= ip; ++i) {
-                    if (s == path[i]) goto G_TAG_LCA_HIT;
+                    if (s == path[i]) { // Found LCA.
+                        LCAFound = true; break;
+                    }
                 }
             }
         }
-        if (s->exit_) s->exit_(me); // EXIT until source.
-        s = s->super;
-    }
-    if (bReachedSource) { // source->super == NULL && target->super == NULL
-        i = ++ip;
-        goto G_TAG_LCA_HIT;
+        if (LCAFound) break;
+        if (((SM_StatePtr)(s))->exit_) {
+            (*(((SM_StatePtr)(s))->exit_))(me); // EXIT until source.
+        }
+        s = ((SM_StatePtr)s)->super;
     }
 
-    // Should never arrive.
-    SM_ERROR("Punishment.");
+    if (LCAFound) {
+    } else {
+        if (bReachedSource) {
+            // source->super == NULL && target->super == NULL
+            i = ++ip;
+        } else {
+            // Should never arrive.
+            SM_ERROR("Punishment.");
+        }
+    }
 
-G_TAG_LCA_HIT:
     while (--i >= 0) { // ENTRY except LCA.
-        if (path[i]->entry_) path[i]->entry_(me);
+        s = ((SM_StatePtr)(path[i]));
+        if (s->entry_) (*s->entry_)(me);
     }
 
     me->curr = target;
-    SM_Hsm_initDrill_(me, path);
-}
 
-//............................................................................
-//! @private @memberof SM_Hsm
-void SM_Hsm_initDrill_(
-    SM_Hsm * const me,
-    SM_StatePtr * const path) SM_HSM_RETT
-{
-    SM_REQUIRE(me != (SM_Hsm *)0);
-    while (me->curr->init_ != (SM_InitHandler)0) {
-        SM_StatePtr s;
-        SM_StatePtr target;
-        signed char i;
-        signed char ip;
-
-        target = me->curr->init_(me);
+    while (((SM_StatePtr)(me->curr))->init_ != (SM_InitHandler)0) {
+        target = (*(((SM_StatePtr)(me->curr))->init_))(me);
         SM_ENSURE(target != (SM_StatePtr)0);
-
         ip = -1;
         s = target;
         while (s != (SM_StatePtr)0 && s != me->curr) {
             SM_REQUIRE(ip < (SM_MAX_NEST_DEPTH_ - 1));
             path[++ip] = s;
-            s = s->super;
+            s = ((SM_StatePtr)s)->super;
         }
-
-        for (i = ip; i >= 0; i--) {
-            me->curr = path[i];
-            if (path[i]->entry_) path[i]->entry_(me);
+        for (i = ip; i >= 0; --i) {
+            s = (SM_StatePtr)(path[i]);
+            me->curr = s;
+            if (s->entry_) (*s->entry_)(me);
         }
     }
 }

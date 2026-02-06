@@ -7,7 +7,7 @@
 // To Public License, Version 2, as published by Sam Hocevar.
 // See http://www.wtfpl.net/ for more details.
 //============================================================================
-#include <stdint.h>
+#include "sm_port.h"
 #include "sm_assert.h"
 #include "sm_tracer.h"
 
