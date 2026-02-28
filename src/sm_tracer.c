@@ -79,7 +79,8 @@ void SM_Tracer_ctor(SM_Tracer * const me,
 //............................................................................
 //! @static @public @memberof SM_Tracer
 static unsigned char SM_Tracer_is_esc(unsigned char byte_) {
-    return ((byte_ == 0x7E) || (byte_ == 0x7D)) ? 0xFF : 0x00;
+    if ((byte_ == 0x7E) || (byte_ == 0x7D)) return 1U;
+    else                                    return 0U;
 }
 
 //............................................................................
@@ -110,7 +111,7 @@ unsigned char *SM_Trace_getBlock(SM_Tracer * const me) SMT_REET {
         fb = (unsigned char *)me->freeHead;
         me->freeHead = (void **)(me->freeHead[0]);
         --me->nFree;
-        me->nMin > me->nFree ? me->nMin = me->nFree : (void)0;
+        if (me->nFree < me->nMin) me->nMin = me->nFree;
     }
 
     SMT_CRITICAL_SECTION_EXIT();
@@ -127,17 +128,24 @@ void SM_Trace_push(SM_Tracer * const me, unsigned char *pfb) SMT_REET {
 
         if (me->nUsed < me->qLen) {  // Not full.
             me->ring[me->head] = (void *)pfb;
-            me->head == 0 ? me->head = me->qLen - 1 : --me->head;
+            if (me->head == 0) me->head = me->qLen;
+            --me->head;
             ++me->nUsed;
-            me->qMin > me->qLen - me->nUsed ?
-                me->qMin = me->qLen - me->nUsed : (void)0;
+            if (me->qMin > me->qLen - me->nUsed) {
+                me->qMin = me->qLen - me->nUsed;
+            }
         } else { // Full.
+            // GC...
             ((void **)(me->ring[me->tail]))[0] = (void *)me->freeHead;
             me->freeHead = (void **)me->ring[me->tail];
             ++me->nFree;
-            me->tail == 0 ? me->tail = me->qLen - 1 : --me->tail;
+            if (me->tail == 0) me->tail = me->qLen;
+            --me->tail;
+
+            // Newest one...
             me->ring[me->head] = (void *)pfb;
-            me->head == 0 ? me->head = me->qLen - 1 : --me->head;
+            if (me->head == 0) me->head = me->qLen;
+            --me->head;
         }
 
         SMT_CRITICAL_SECTION_EXIT();
@@ -162,7 +170,8 @@ void SM_Tracer_idle(SM_Tracer * const me) {
             SM_ENSURE(me->currCnt <= me->blockSize);
 
             // Refresh...
-            me->tail == 0 ? me->tail = me->qLen - 1 : --me->tail;
+            if (me->tail == 0) me->tail = me->qLen;
+            --me->tail;
             --me->nUsed;
 
             SMT_CRITICAL_SECTION_EXIT();
@@ -175,7 +184,8 @@ void SM_Tracer_idle(SM_Tracer * const me) {
 
             // RecID...
             me->chksumIter += me->currBuf[me->currLen - me->currCnt--];
-            SM_Tracer_flush(me->currBuf[me->currLen - me->currCnt - 1], 1);
+            SM_Tracer_flush(me->currBuf[me->currLen - me->currCnt - 1],
+                            1);
         } else {
             SMT_CRITICAL_SECTION_EXIT();
         }
@@ -197,7 +207,8 @@ void SM_Tracer_idle(SM_Tracer * const me) {
         } else {
             // [pLen] [payload]...
             me->chksumIter += me->currBuf[me->currLen - me->currCnt--];
-            SM_Tracer_flush(me->currBuf[me->currLen - me->currCnt - 1], 1);
+            SM_Tracer_flush(me->currBuf[me->currLen - me->currCnt - 1],
+                            1);
         }
     }
 }
