@@ -17,8 +17,12 @@ extern "C" {
 // SM_Assert enable ==========================================================
 #ifndef SM_DBC_DISABLE
 
+    #ifndef SM_ROM
+        #define SM_ROM const
+    #endif
+
     #define SM_DEFINE_MODULE(name_)                                          \
-                             static char const SM_module_name_[] = name_;
+                             static char SM_ROM SM_module_name_[] = name_;
 
     #define SM_ERROR(dummy_) (SM_onAssert(SM_module_name_, __LINE__))
     #define SM_ASSERT(cond_) ((cond_) ? (void)0 : SM_ERROR("Error."))
