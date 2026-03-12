@@ -11,7 +11,7 @@
 
 //============================================================================
 // Signal
-enum SmHsmTst {
+enum SmHsmTstSig {
     SmHsmTst_dummy = 0,
 
     A_SIG,
@@ -120,7 +120,7 @@ SM_HsmState SM_HSM_ROM SmHsmTst_s211 = {
 //..........................................................................
 // Instance
 SmHsmTst SmHsmTst_inst;
-SM_Hsm * AO_SmHsmTst = &SmHsmTst_inst.super;
+SM_Hsm * AO_SmHsmTst = &SmHsmTst_inst.sm_hsm_;
 // functions
 static void SmHsmTst_init(SmHsmTst * const me, SmHsmTstEvt const * const e) SM_HSM_RETT {
     (void)e;
@@ -360,7 +360,7 @@ static SM_RetState SmHsmTst_s211_(SM_Hsm * const me, SmHsmTstEvt const * const e
 }
 
 //..........................................................................
-static void SM_Hsm_test_dispatch(SM_HSM_SIGNAL sig) {
+static void SM_Hsm_test_dispatch(enum SmHsmTstSig sig) {
     SmHsmTstEvt e;
     e.sig = sig;
     (*SmHsmTst_inst.dispatch)(&SmHsmTst_inst, &e);
