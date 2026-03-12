@@ -21,5 +21,5 @@ sequenceDiagram
   note over APP: CALL sm_assert
   APP --> APP: SM_ASSERT...
   note over APP: CALL sm_tracer
-  APP --> APP: <br/>SM_TRACE_BEGIN<br/>SM_TRACE_PAYLOAD_BE<br/>SM_TRACE_END
+  APP --> APP: SM_TRACE_BEGIN()<br/>SM_TRACE_PAYLOAD_BE()<br/>SM_TRACE_END()
 ```
