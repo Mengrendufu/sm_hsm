@@ -8,6 +8,7 @@
 // See http://www.wtfpl.net/ for more details.
 //============================================================================
 #include <stdio.h>
+#include <stdlib.h>
 #include "sm_assert.h"
 #include "bsp.h"
 
