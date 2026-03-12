@@ -51,7 +51,6 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
-#
-# vs-code config
-#
+#=============================================================================
 .vscode
+._tmp
