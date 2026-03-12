@@ -7,13 +7,10 @@
 // To Public License, Version 2, as published by Sam Hocevar.
 // See http://www.wtfpl.net/ for more details.
 //============================================================================
-#ifndef SM_HSM_TST_H_
-#define SM_HSM_TST_H_
+#ifndef SM_HSM_TST_PORT_H_
+#define SM_HSM_TST_PORT_H_
 
 //============================================================================
 #include "sm_port.h"
 
-//============================================================================
-#include <stdio.h>
-
-#endif // SM_HSM_TST_H_
+#endif // SM_HSM_TST_PORT_H_

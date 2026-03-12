@@ -10,6 +10,10 @@
 #ifndef SM_PORT_H_
 #define SM_PORT_H_
 
+// sm_assert port. ===========================================================
+#include <stdio.h>
+#include <stdlib.h>
+
 // SM_Hsm port. ==============================================================
 // #define SM_HSM_ROM const
 // #define SM_HSM_RETT
