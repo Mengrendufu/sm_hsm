@@ -19,6 +19,6 @@ void BSP_print(char const * const msg) {
 
 //============================================================================
 SM_NORETURN SM_onAssert(char const *module, int label) SM_RETT {
-    fprintf(stderr, "ASSERT: %s:%d\n", module, (int)loc);
+    fprintf(stderr, "ASSERT: %s:%d\n", module, label);
     exit(-1);
 }
