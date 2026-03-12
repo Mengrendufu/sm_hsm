@@ -7,9 +7,17 @@
 // To Public License, Version 2, as published by Sam Hocevar.
 // See http://www.wtfpl.net/ for more details.
 //============================================================================
+#include <stdio.h>
+#include "sm_assert.h"
 #include "bsp.h"
 
 //============================================================================
 void BSP_print(char const * const msg) {
     printf(msg);
+}
+
+//============================================================================
+SM_NORETURN SM_onAssert(char const *module, int label) SM_RETT {
+    fprintf(stderr, "ASSERT: %s:%d\n", module, (int)loc);
+    exit(-1);
 }
