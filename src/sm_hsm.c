@@ -56,6 +56,7 @@ void SM_Hsm_init_(SM_Hsm * const me, SM_InitHandler initial_) SM_HSM_RETT {
             path[++ip] = s;
             s = ((SM_StatePtr)s)->super;
         }
+        SM_ENSURE(s == me->curr);
         for (i = ip; i >= 0; --i) {
             s = (SM_StatePtr)(path[i]);
             me->curr = s;
@@ -167,6 +168,7 @@ void SM_Hsm_transition_(SM_Hsm * const me,
             path[++ip] = s;
             s = ((SM_StatePtr)s)->super;
         }
+        SM_ENSURE(s == me->curr);
         for (i = ip; i >= 0; --i) {
             s = (SM_StatePtr)(path[i]);
             me->curr = s;
