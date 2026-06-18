@@ -14,6 +14,10 @@
 //============================================================================
 SM_DEFINE_MODULE("sm_hsm")
 
+static void SM_Hsm_transition_(SM_Hsm * const me,
+                               SM_StatePtr source,
+                               SM_StatePtr target) SM_HSM_RETT;
+
 //============================================================================
 //! @private @memberof SM_Hsm
 void SM_Hsm_init_(SM_Hsm * const me, SM_InitHandler initial_) SM_HSM_RETT {
@@ -87,14 +91,18 @@ void SM_Hsm_dispatch_(SM_Hsm * const me,
             case SM_RET_TRAN:    SM_Hsm_transition_(me,
                                                     s, me->next);
                                  return;
-            default:             SM_ERROR("Whip."); break;
+            default: {
+                // Illegal return code from state handler.
+                SM_ERROR("Whip.");
+                break;
+            }
         }
     }
 }
 
 //..........................................................................
 //! @private @memberof SM_Hsm
-void SM_Hsm_transition_(SM_Hsm * const me,
+static void SM_Hsm_transition_(SM_Hsm * const me,
                         SM_StatePtr source,
                         SM_StatePtr target) SM_HSM_RETT
 {
@@ -102,14 +110,12 @@ void SM_Hsm_transition_(SM_Hsm * const me,
     SM_StatePtr s;
     signed char ip;
     signed char i;
-    bool bReachedSource;
-    bool LCAFound;
 
     SM_REQUIRE(me != (SM_Hsm *)0);
     SM_REQUIRE((SM_StatePtr)(source) != (SM_StatePtr)0);
     SM_REQUIRE((SM_StatePtr)(target) != (SM_StatePtr)0);
 
-    // ENTRY path.
+    // Build entry path: target → root.
     ip = -1;
     s = target;
     while (s != (SM_StatePtr)0) {
@@ -118,40 +124,75 @@ void SM_Hsm_transition_(SM_Hsm * const me,
         s = ((SM_StatePtr)(s))->super;
     }
 
-    i = 0;
-    bReachedSource = false;
-    LCAFound = false;
-    s = me->curr;
-    while (s != (SM_StatePtr)0) {
-        if (s == source) bReachedSource = true;
-        if (bReachedSource) {
-            if (!((s == source) && (target == source))) { // Not self-tran.
-                for (i = 0; i <= ip; ++i) {
-                    if (s == path[i]) { // Found LCA.
-                        LCAFound = true; break;
-                    }
-                }
-            }
+    // Simple transitions ----------------------------------------------------
+    if (source == target) {
+        // (a) Self-transition: exit source, enter from target->super down.
+        if (((SM_StatePtr)(source))->exit_) {
+            (*(((SM_StatePtr)(source))->exit_))(me);
         }
-        if (LCAFound) break;
-        if (((SM_StatePtr)(s))->exit_) {
-            (*(((SM_StatePtr)(s))->exit_))(me); // EXIT until source.
+        i = 1; // LCA is target->super.
+    } else if (source == ((SM_StatePtr)(target))->super) {
+        // (b) source is target's parent: no exit, enter target.
+        i = 1;
+    } else if (((SM_StatePtr)(source))->super
+                == ((SM_StatePtr)(target))->super) {
+        // (c) Same parent: exit source, enter target.
+        if (((SM_StatePtr)(source))->exit_) {
+            (*(((SM_StatePtr)(source))->exit_))(me);
         }
-        s = ((SM_StatePtr)s)->super;
-    }
-
-    if (LCAFound) {
+        i = 1;
+    } else if (((SM_StatePtr)(source))->super == target) {
+        // (d) target is source's parent: exit source, no entry.
+        if (((SM_StatePtr)(source))->exit_) {
+            (*(((SM_StatePtr)(source))->exit_))(me);
+        }
+        i = 0;
     } else {
-        if (bReachedSource) {
-            // source->super == NULL && target->super == NULL
-            i = ++ip;
-        } else {
+        // Complex transition ------------------------------------------------
+        bool LCAFound = false;
+        bool bReachedSource = false;
+
+        // Exit curr → source.
+        s = me->curr;
+        while (s != (SM_StatePtr)0) {
+            if (s == source) {
+                bReachedSource = true;
+                break;
+            }
+            if (((SM_StatePtr)(s))->exit_) {
+                (*(((SM_StatePtr)(s))->exit_))(me);
+            }
+            s = ((SM_StatePtr)s)->super;
+        }
+
+        if (!bReachedSource) {
             // Should never arrive.
             SM_ERROR("Punishment.");
+        } else {
+            // Search LCA upwards from source.
+            while (s != (SM_StatePtr)0) {
+                for (i = 0; i <= ip; ++i) {
+                    if (s == path[i]) {
+                        LCAFound = true;
+                        break;
+                    }
+                }
+                if (LCAFound) {
+                    break;
+                }
+                if (((SM_StatePtr)(s))->exit_) {
+                    (*(((SM_StatePtr)(s))->exit_))(me);
+                }
+                s = ((SM_StatePtr)s)->super;
+            }
+
+            if (!LCAFound) {
+                i = ++ip;
+            }
         }
     }
 
-    while (--i >= 0) { // ENTRY except LCA.
+    while (--i >= 0) {
         s = ((SM_StatePtr)(path[i]));
         if (s->entry_) (*s->entry_)(me);
     }
@@ -175,4 +216,24 @@ void SM_Hsm_transition_(SM_Hsm * const me,
             if (s->entry_) (*s->entry_)(me);
         }
     }
+}
+
+//..........................................................................
+//! @static @public @memberof SM_Hsm
+SM_StatePtr SM_Hsm_childState_(SM_Hsm * const me,
+                               SM_StatePtr parent) SM_HSM_RETT
+{
+    SM_StatePtr s;
+
+    SM_REQUIRE(me != (SM_Hsm *)0);
+    SM_REQUIRE(parent != (SM_StatePtr)0);
+
+    s = me->curr;
+    while (s != (SM_StatePtr)0) {
+        if (((SM_StatePtr)s)->super == parent) {
+            return s;
+        }
+        s = ((SM_StatePtr)s)->super;
+    }
+    return (SM_StatePtr)0;
 }

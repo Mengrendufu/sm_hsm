@@ -82,6 +82,7 @@ typedef struct SM_Hsm {
 #define _SM_HANDLED()     (SM_RET_HANDLED)
 #define _SM_SUPER()       (SM_RET_SUPER)
 #define _SM_TRAN(target_) ((((SM_Hsm *)(me))->next) = (target_), SM_RET_TRAN)
+#define _SM_TRAN_HIST(hist_) ((((SM_Hsm *)(me))->next) = (hist_), SM_RET_TRAN)
 #define _SM_INIT(target_) (target_) // TOP-INIT && STATE-INIT
 
 //============================================================================
@@ -107,8 +108,49 @@ void SM_Hsm_dispatch_(SM_Hsm * const me,
                       void const * const e) SM_HSM_RETT;
 
 //! @static @public @memberof SM_Hsm
-void SM_Hsm_transition_(SM_Hsm * const me,
-                        SM_StatePtr source,
-                        SM_StatePtr target) SM_HSM_RETT;
+SM_StatePtr SM_Hsm_childState_(SM_Hsm * const me,
+                               SM_StatePtr parent) SM_HSM_RETT;
+
+//============================================================================
+// NOTE: History Transition (hist_tran)
+//
+// Consider test/smhsmtst.c, where s2 is a composite with init_→s211
+// and s21 (child of s2) has init_→s211, forming s2→s21→s211.
+//
+// Suppose current state is s211.  The user wants to leave s2 and
+// later come back to "where we were."
+//
+// The history variable lives inside the AO, just like QM-generated code:
+//
+//   typedef struct {
+//       SM_Hsm sm_hsm_;
+//       uint8_t foo;
+//       SM_StatePtr hist_s2;   // history of s2
+//       SM_StatePtr shist_s2;  // shallow history of s2
+//   } SmHsmTst;
+//
+// --- Deep history: restore the innermost active sub-state ------------
+//
+//   void SmHsmTst_s2_exit_(SM_Hsm * const me) SM_HSM_RETT {
+//       SmHsmTst *ao = container_of(me, SmHsmTst, sm_hsm_);
+//       ao->hist_s2 = me->curr;  // curr == s211, deepest active state
+//   }
+//
+//   case H_SIG: {
+//       SmHsmTst *ao = container_of(me, SmHsmTst, sm_hsm_);
+//       return _SM_TRAN_HIST(ao->hist_s2);
+//   }
+//
+// --- Shallow history: restore only the direct child of s2 ------------
+//
+//   void SmHsmTst_s2_exit_(SM_Hsm * const me) SM_HSM_RETT {
+//       SmHsmTst *ao = container_of(me, SmHsmTst, sm_hsm_);
+//       ao->shist_s2 = SM_Hsm_childState_(me, &SmHsmTst_s2);
+//   }
+//
+//   case H_SIG: {
+//       SmHsmTst *ao = container_of(me, SmHsmTst, sm_hsm_);
+//       return _SM_TRAN_HIST(ao->shist_s2);
+//   }
 
 #endif // SM_HSM_H_

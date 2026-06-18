@@ -19,7 +19,7 @@ extern "C" {
 
     #ifndef SM_ROM
         #define SM_ROM const
-    #endif
+    #endif // ndef SM_ROM
 
     #define SM_DEFINE_MODULE(name_)                                          \
                              static char SM_ROM SM_module_name_[] = name_;
@@ -33,11 +33,11 @@ extern "C" {
 
     #ifndef SM_NORETURN
         #define SM_NORETURN void
-    #endif // SM_NORETURN
+    #endif // ndef SM_NORETURN
 
     #ifndef SM_RETT
         #define SM_RETT
-    #endif // SM_RETT
+    #endif // ndef SM_RETT
 
     SM_NORETURN SM_onAssert(char const *module, int label) SM_RETT;
 
@@ -51,7 +51,7 @@ extern "C" {
     #define SM_ASSERT(cond_) ((void)0)
     #define SM_ALLEGE(cond_) ((void)(cond_))
 
-#endif // SM_DBC_DISABLE
+#endif // ndef SM_DBC_DISABLE
 
 //============================================================================
 #define SM_REQUIRE(cond_) SM_ASSERT(cond_)
