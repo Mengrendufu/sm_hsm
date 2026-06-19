@@ -98,7 +98,7 @@ void SM_Hsm_dispatch_(SM_Hsm * const me,
                 break;
             }
             case SM_RET_TRAN:
-            case SM_RET_TRAN_HIST: {
+            case SM_RET_HIST:     {
                 SM_Hsm_transition_(me,
                                    s, me->next);
                 return;

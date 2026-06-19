@@ -37,7 +37,7 @@ typedef unsigned char SM_RetState;
 #define SM_RET_HANDLED 0
 #define SM_RET_TRAN    1
 #define SM_RET_SUPER   2
-#define SM_RET_TRAN_HIST 3
+#define SM_RET_HIST 3
 
 //! @endcond
 
@@ -83,7 +83,7 @@ typedef struct SM_Hsm {
 #define _SM_HANDLED()     (SM_RET_HANDLED)
 #define _SM_SUPER()       (SM_RET_SUPER)
 #define _SM_TRAN(target_) ((((SM_Hsm *)(me))->next) = (target_), SM_RET_TRAN)
-#define _SM_TRAN_HIST(hist_) ((((SM_Hsm *)(me))->next) = (hist_), SM_RET_TRAN_HIST)
+#define _SM_HIST(hist_) ((((SM_Hsm *)(me))->next) = (hist_), SM_RET_HIST)
 #define _SM_INIT(target_) (target_) // TOP-INIT && STATE-INIT
 
 //============================================================================
@@ -139,7 +139,7 @@ SM_StatePtr SM_Hsm_childState_(SM_Hsm * const me,
 //
 //   case H_SIG: {
 //       SmHsmTst *ao = container_of(me, SmHsmTst, sm_hsm_);
-//       return _SM_TRAN_HIST(ao->hist_s2);
+//       return _SM_HIST(ao->hist_s2);
 //   }
 //
 // --- Shallow history: restore only the direct child of s2 ------------
@@ -151,10 +151,10 @@ SM_StatePtr SM_Hsm_childState_(SM_Hsm * const me,
 //
 //   case H_SIG: {
 //       SmHsmTst *ao = container_of(me, SmHsmTst, sm_hsm_);
-//       return _SM_TRAN_HIST(ao->shist_s2);
+//       return _SM_HIST(ao->shist_s2);
 //   }
 //
-// Both macros return SM_RET_TRAN_HIST; dispatch handles it identically
+// Both macros return SM_RET_HIST; dispatch handles it identically
 // to SM_RET_TRAN — the separate code exists purely for semantic clarity.
 
 #endif // SM_HSM_H_
