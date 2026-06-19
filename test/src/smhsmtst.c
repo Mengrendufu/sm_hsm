@@ -441,11 +441,11 @@ static SM_RetState SmHsmTst_s222_(SM_Hsm * const me,
 static void SM_Hsm_test_dispatch(enum SmHsmTstSig sig) {
     SmHsmTstEvt e;
     e.sig = (uint8_t)sig;
-    SmHsmTst_dispatch(&SmHsmTst_inst, &e);
+    SM_Hsm_dispatch_(AO_SmHsmTst, &e);
 }
 void SmHsmTst_test(void) {
     SmHsmTst_ctor();
-    SmHsmTst_init(&SmHsmTst_inst, (SmHsmTstEvt *)0);
+    SM_Hsm_init_(AO_SmHsmTst, (SM_InitHandler)SmHsmTst_TOP_initial_);
 
     // A B C D E E F G H I J K L I M N O P N
     BSP_print("\n");
