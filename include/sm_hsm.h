@@ -153,5 +153,8 @@ SM_StatePtr SM_Hsm_childState_(SM_Hsm * const me,
 //       SmHsmTst *ao = container_of(me, SmHsmTst, sm_hsm_);
 //       return _SM_TRAN_HIST(ao->shist_s2);
 //   }
+//
+// Both macros return SM_RET_TRAN_HIST; dispatch handles it identically
+// to SM_RET_TRAN — the separate code exists purely for semantic clarity.
 
 #endif // SM_HSM_H_
