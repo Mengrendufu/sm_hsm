@@ -65,11 +65,11 @@ static void SmHsmTst_s1_exit_(SM_Hsm * const me) SM_HSM_RETT;
 static SM_RetState SmHsmTst_s1_(SM_Hsm * const me,
                                 SmHsmTstEvt const * const e) SM_HSM_RETT;
 SM_HsmState SM_HSM_ROM SmHsmTst_s1 = {
-    (SM_StatePtr)NULL,                    // super
-    (SM_InitHandler)&SmHsmTst_s1_init_,   // init_
+    (SM_StatePtr)NULL,                     // super
+    (SM_InitHandler)&SmHsmTst_s1_init_,    // init_
     (SM_ActionHandler)&SmHsmTst_s1_entry_, // entry_
-    (SM_ActionHandler)&SmHsmTst_s1_exit_, // exit_
-    (SM_StateHandler)&SmHsmTst_s1_        // handler
+    (SM_ActionHandler)&SmHsmTst_s1_exit_,  // exit_
+    (SM_StateHandler)&SmHsmTst_s1_         // handler
 };
 // s11
 static void SmHsmTst_s11_entry_(SM_Hsm * const me) SM_HSM_RETT;
@@ -77,11 +77,11 @@ static void SmHsmTst_s11_exit_(SM_Hsm * const me) SM_HSM_RETT;
 static SM_RetState SmHsmTst_s11_(SM_Hsm * const me,
                                  SmHsmTstEvt const * const e) SM_HSM_RETT;
 SM_HsmState SM_HSM_ROM SmHsmTst_s11 = {
-    (SM_StatePtr)&SmHsmTst_s1,             // super
-    (SM_InitHandler)NULL,                  // init_
+    (SM_StatePtr)&SmHsmTst_s1,              // super
+    (SM_InitHandler)NULL,                   // init_
     (SM_ActionHandler)&SmHsmTst_s11_entry_, // entry_
-    (SM_ActionHandler)&SmHsmTst_s11_exit_, // exit_
-    (SM_StateHandler)&SmHsmTst_s11_        // handler
+    (SM_ActionHandler)&SmHsmTst_s11_exit_,  // exit_
+    (SM_StateHandler)&SmHsmTst_s11_         // handler
 };
 // s12
 static void SmHsmTst_s12_entry_(SM_Hsm * const me) SM_HSM_RETT;
@@ -89,11 +89,11 @@ static void SmHsmTst_s12_exit_(SM_Hsm * const me) SM_HSM_RETT;
 static SM_RetState SmHsmTst_s12_(SM_Hsm * const me,
                                  SmHsmTstEvt const * const e) SM_HSM_RETT;
 SM_HsmState SM_HSM_ROM SmHsmTst_s12 = {
-    (SM_StatePtr)&SmHsmTst_s1,             // super
-    (SM_InitHandler)NULL,                  // init_
+    (SM_StatePtr)&SmHsmTst_s1,              // super
+    (SM_InitHandler)NULL,                   // init_
     (SM_ActionHandler)&SmHsmTst_s12_entry_, // entry_
-    (SM_ActionHandler)&SmHsmTst_s12_exit_, // exit_
-    (SM_StateHandler)&SmHsmTst_s12_        // handler
+    (SM_ActionHandler)&SmHsmTst_s12_exit_,  // exit_
+    (SM_StateHandler)&SmHsmTst_s12_         // handler
 };
 // s2
 static SM_StatePtr SmHsmTst_s2_init_(SM_Hsm * const me) SM_HSM_RETT;
@@ -102,11 +102,11 @@ static void SmHsmTst_s2_exit_(SM_Hsm * const me) SM_HSM_RETT;
 static SM_RetState SmHsmTst_s2_(SM_Hsm * const me,
                                 SmHsmTstEvt const * const e) SM_HSM_RETT;
 SM_HsmState SM_HSM_ROM SmHsmTst_s2 = {
-    (SM_StatePtr)NULL,                    // super (= top)
-    (SM_InitHandler)&SmHsmTst_s2_init_,   // init_
+    (SM_StatePtr)NULL,                     // super (= top)
+    (SM_InitHandler)&SmHsmTst_s2_init_,    // init_
     (SM_ActionHandler)&SmHsmTst_s2_entry_, // entry_
-    (SM_ActionHandler)&SmHsmTst_s2_exit_, // exit_
-    (SM_StateHandler)&SmHsmTst_s2_        // handler
+    (SM_ActionHandler)&SmHsmTst_s2_exit_,  // exit_
+    (SM_StateHandler)&SmHsmTst_s2_         // handler
 };
 // s21
 static void SmHsmTst_s21_entry_(SM_Hsm * const me) SM_HSM_RETT;
@@ -114,11 +114,11 @@ static void SmHsmTst_s21_exit_(SM_Hsm * const me) SM_HSM_RETT;
 static SM_RetState SmHsmTst_s21_(SM_Hsm * const me,
                                  SmHsmTstEvt const * const e) SM_HSM_RETT;
 SM_HsmState SM_HSM_ROM SmHsmTst_s21 = {
-    (SM_StatePtr)&SmHsmTst_s2,             // super
-    (SM_InitHandler)NULL,                  // init_
+    (SM_StatePtr)&SmHsmTst_s2,              // super
+    (SM_InitHandler)NULL,                   // init_
     (SM_ActionHandler)&SmHsmTst_s21_entry_, // entry_
-    (SM_ActionHandler)&SmHsmTst_s21_exit_, // exit_
-    (SM_StateHandler)&SmHsmTst_s21_        // handler
+    (SM_ActionHandler)&SmHsmTst_s21_exit_,  // exit_
+    (SM_StateHandler)&SmHsmTst_s21_         // handler
 };
 // s22
 static SM_StatePtr SmHsmTst_s22_init_(SM_Hsm * const me) SM_HSM_RETT;
@@ -127,11 +127,11 @@ static void SmHsmTst_s22_exit_(SM_Hsm * const me) SM_HSM_RETT;
 static SM_RetState SmHsmTst_s22_(SM_Hsm * const me,
                                  SmHsmTstEvt const * const e) SM_HSM_RETT;
 SM_HsmState SM_HSM_ROM SmHsmTst_s22 = {
-    (SM_StatePtr)&SmHsmTst_s2,             // super
-    (SM_InitHandler)&SmHsmTst_s22_init_,   // init_
+    (SM_StatePtr)&SmHsmTst_s2,              // super
+    (SM_InitHandler)&SmHsmTst_s22_init_,    // init_
     (SM_ActionHandler)&SmHsmTst_s22_entry_, // entry_
-    (SM_ActionHandler)&SmHsmTst_s22_exit_, // exit_
-    (SM_StateHandler)&SmHsmTst_s22_        // handler
+    (SM_ActionHandler)&SmHsmTst_s22_exit_,  // exit_
+    (SM_StateHandler)&SmHsmTst_s22_         // handler
 };
 // s221
 static void SmHsmTst_s221_entry_(SM_Hsm * const me) SM_HSM_RETT;
@@ -139,11 +139,11 @@ static void SmHsmTst_s221_exit_(SM_Hsm * const me) SM_HSM_RETT;
 static SM_RetState SmHsmTst_s221_(SM_Hsm * const me,
                                   SmHsmTstEvt const * const e) SM_HSM_RETT;
 SM_HsmState SM_HSM_ROM SmHsmTst_s221 = {
-    (SM_StatePtr)&SmHsmTst_s22,             // super
-    (SM_InitHandler)NULL,                   // init_
+    (SM_StatePtr)&SmHsmTst_s22,              // super
+    (SM_InitHandler)NULL,                    // init_
     (SM_ActionHandler)&SmHsmTst_s221_entry_, // entry_
-    (SM_ActionHandler)&SmHsmTst_s221_exit_, // exit_
-    (SM_StateHandler)&SmHsmTst_s221_        // handler
+    (SM_ActionHandler)&SmHsmTst_s221_exit_,  // exit_
+    (SM_StateHandler)&SmHsmTst_s221_         // handler
 };
 // s222
 static void SmHsmTst_s222_entry_(SM_Hsm * const me) SM_HSM_RETT;
@@ -151,11 +151,11 @@ static void SmHsmTst_s222_exit_(SM_Hsm * const me) SM_HSM_RETT;
 static SM_RetState SmHsmTst_s222_(SM_Hsm * const me,
                                   SmHsmTstEvt const * const e) SM_HSM_RETT;
 SM_HsmState SM_HSM_ROM SmHsmTst_s222 = {
-    (SM_StatePtr)&SmHsmTst_s22,             // super
-    (SM_InitHandler)NULL,                   // init_
+    (SM_StatePtr)&SmHsmTst_s22,              // super
+    (SM_InitHandler)NULL,                    // init_
     (SM_ActionHandler)&SmHsmTst_s222_entry_, // entry_
-    (SM_ActionHandler)&SmHsmTst_s222_exit_, // exit_
-    (SM_StateHandler)&SmHsmTst_s222_        // handler
+    (SM_ActionHandler)&SmHsmTst_s222_exit_,  // exit_
+    (SM_StateHandler)&SmHsmTst_s222_         // handler
 };
 
 //..........................................................................
