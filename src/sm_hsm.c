@@ -88,9 +88,10 @@ void SM_Hsm_dispatch_(SM_Hsm * const me,
         switch (ret) {
             case SM_RET_HANDLED: return;
             case SM_RET_SUPER:   s = ((SM_StatePtr)(s))->super; break;
-            case SM_RET_TRAN:    SM_Hsm_transition_(me,
-                                                    s, me->next);
-                                 return;
+            case SM_RET_TRAN:
+            case SM_RET_TRAN_HIST: SM_Hsm_transition_(me,
+                                                      s, me->next);
+                                   return;
             default: {
                 // Illegal return code from state handler.
                 SM_ERROR("Whip.");

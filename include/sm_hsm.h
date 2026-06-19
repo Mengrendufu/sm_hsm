@@ -37,6 +37,7 @@ typedef unsigned char SM_RetState;
 #define SM_RET_HANDLED 0
 #define SM_RET_TRAN    1
 #define SM_RET_SUPER   2
+#define SM_RET_TRAN_HIST 3
 
 //! @endcond
 
@@ -82,7 +83,7 @@ typedef struct SM_Hsm {
 #define _SM_HANDLED()     (SM_RET_HANDLED)
 #define _SM_SUPER()       (SM_RET_SUPER)
 #define _SM_TRAN(target_) ((((SM_Hsm *)(me))->next) = (target_), SM_RET_TRAN)
-#define _SM_TRAN_HIST(hist_) ((((SM_Hsm *)(me))->next) = (hist_), SM_RET_TRAN)
+#define _SM_TRAN_HIST(hist_) ((((SM_Hsm *)(me))->next) = (hist_), SM_RET_TRAN_HIST)
 #define _SM_INIT(target_) (target_) // TOP-INIT && STATE-INIT
 
 //============================================================================
