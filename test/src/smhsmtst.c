@@ -447,7 +447,7 @@ void SmHsmTst_test(void) {
     SmHsmTst_ctor();
     (*SmHsmTst_inst.init)(&SmHsmTst_inst, (SmHsmTstEvt *)0);
 
-    // A B C D E E F G H I J K L M N O P N
+    // A B C D E E F G H I J K L I M N O P N
     BSP_print("\n");
     SM_Hsm_test_dispatch(A_SIG);
     BSP_print("\n");
@@ -474,6 +474,8 @@ void SmHsmTst_test(void) {
     SM_Hsm_test_dispatch(K_SIG);
     BSP_print("\n");
     SM_Hsm_test_dispatch(L_SIG);
+    BSP_print("\n");
+    SM_Hsm_test_dispatch(I_SIG);
     BSP_print("\n");
     SM_Hsm_test_dispatch(M_SIG);
     BSP_print("\n");
