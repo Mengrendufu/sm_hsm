@@ -112,7 +112,7 @@ void SM_Hsm_dispatch_(SM_Hsm * const me,
     }
 }
 
-//..........................................................................
+//............................................................................
 //! @private @memberof SM_Hsm
 static void SM_Hsm_transition_(SM_Hsm * const me,
                                SM_StatePtr source,
@@ -230,7 +230,7 @@ static void SM_Hsm_transition_(SM_Hsm * const me,
     }
 }
 
-//..........................................................................
+//............................................................................
 //! @static @public @memberof SM_Hsm
 SM_StatePtr SM_Hsm_childState_(SM_Hsm * const me,
                                SM_StatePtr parent) SM_HSM_RETT

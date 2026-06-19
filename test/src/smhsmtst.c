@@ -181,7 +181,7 @@ static void SmHsmTst_ctor(void) {
     me->foo = false;
 }
 
-// HSM implementations .....................................................
+// HSM implementations .......................................................
 // UML-Top-Initial
 static SM_StatePtr SmHsmTst_TOP_initial_(SM_Hsm * const me) SM_HSM_RETT {
     SmHsmTst *ao = container_of(me, SmHsmTst, sm_hsm_);
@@ -193,7 +193,7 @@ static SM_StatePtr SmHsmTst_TOP_initial_(SM_Hsm * const me) SM_HSM_RETT {
     return _SM_INIT(&SmHsmTst_s1);
 }
 
-// s1 ......................................................................
+// s1 ........................................................................
 static SM_StatePtr SmHsmTst_s1_init_(SM_Hsm * const me) SM_HSM_RETT {
     (void)me;
     return _SM_INIT(&SmHsmTst_s11);
@@ -228,7 +228,7 @@ static SM_RetState SmHsmTst_s1_(SM_Hsm * const me,
     }
 }
 
-// s11 .....................................................................
+// s11 .......................................................................
 static void SmHsmTst_s11_entry_(SM_Hsm * const me) SM_HSM_RETT {
     (void)me;
     BSP_print("s11-ENTRY.");
@@ -250,7 +250,7 @@ static SM_RetState SmHsmTst_s11_(SM_Hsm * const me,
     }
 }
 
-// s12 .....................................................................
+// s12 .......................................................................
 static void SmHsmTst_s12_entry_(SM_Hsm * const me) SM_HSM_RETT {
     (void)me;
     BSP_print("s12-ENTRY.");
@@ -273,7 +273,7 @@ static SM_RetState SmHsmTst_s12_(SM_Hsm * const me,
     }
 }
 
-// s2 ......................................................................
+// s2 ........................................................................
 static SM_StatePtr SmHsmTst_s2_init_(SM_Hsm * const me) SM_HSM_RETT {
     (void)me;
     return _SM_INIT(&SmHsmTst_s221);
@@ -309,7 +309,7 @@ static SM_RetState SmHsmTst_s2_(SM_Hsm * const me,
     }
 }
 
-// s21 .....................................................................
+// s21 .......................................................................
 static void SmHsmTst_s21_entry_(SM_Hsm * const me) SM_HSM_RETT {
     (void)me;
     BSP_print("s21-ENTRY.");
@@ -331,7 +331,7 @@ static SM_RetState SmHsmTst_s21_(SM_Hsm * const me,
     }
 }
 
-// s22 .....................................................................
+// s22 .......................................................................
 static SM_StatePtr SmHsmTst_s22_init_(SM_Hsm * const me) SM_HSM_RETT {
     (void)me;
     return _SM_INIT(&SmHsmTst_s221);
@@ -372,7 +372,7 @@ static SM_RetState SmHsmTst_s22_(SM_Hsm * const me,
     }
 }
 
-// s221 ....................................................................
+// s221 ......................................................................
 static void SmHsmTst_s221_entry_(SM_Hsm * const me) SM_HSM_RETT {
     (void)me;
     BSP_print("s221-ENTRY.");
@@ -415,7 +415,7 @@ static SM_RetState SmHsmTst_s221_(SM_Hsm * const me,
     }
 }
 
-// s222 ....................................................................
+// s222 ......................................................................
 static void SmHsmTst_s222_entry_(SM_Hsm * const me) SM_HSM_RETT {
     (void)me;
     BSP_print("s222-ENTRY.");
