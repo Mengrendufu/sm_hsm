@@ -49,7 +49,7 @@ typedef struct {
 
     bool foo;
 
-    // history variables (cf. QPC ToastOven)
+    // history variables
     SM_StatePtr hist_s2;   // shallow history of s2
     SM_StatePtr hist_s22;  // deep history of s22
 } SmHsmTst;
