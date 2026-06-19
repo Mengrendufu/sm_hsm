@@ -84,7 +84,7 @@ typedef struct SM_Hsm {
 #define _SM_SUPER()       (SM_RET_SUPER)
 #define _SM_TRAN(target_) ((((SM_Hsm *)(me))->next) = (target_), SM_RET_TRAN)
 #define _SM_HIST(hist_) ((((SM_Hsm *)(me))->next) = (hist_), SM_RET_HIST)
-#define _SM_INIT(target_) (target_) // TOP-INIT && STATE-INIT
+#define _SM_INIT(target_) (target_) // Top-init and state-init only
 
 //============================================================================
 // Deepest nest level for HSM, TOP state exclude
