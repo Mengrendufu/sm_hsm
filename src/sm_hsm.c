@@ -236,12 +236,13 @@ SM_StatePtr SM_Hsm_childState_(SM_Hsm * const me,
                                SM_StatePtr parent) SM_HSM_RETT
 {
     SM_StatePtr s;
-    SM_StatePtr child = (SM_StatePtr)0;
+    SM_StatePtr child;
 
     SM_REQUIRE(me != (SM_Hsm *)0);
     SM_REQUIRE(parent != (SM_StatePtr)0);
 
     s = me->curr;
+    child = (SM_StatePtr)0;
     while (s != (SM_StatePtr)0) {
         if (((SM_StatePtr)s)->super == parent) {
             child = s;
