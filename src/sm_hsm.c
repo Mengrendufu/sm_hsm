@@ -43,7 +43,9 @@ void SM_Hsm_init_(SM_Hsm * const me, SM_InitHandler initial_) SM_HSM_RETT {
 
     while (ip >= 0) {
         s = (SM_StatePtr)(path[ip]);
-        if (s->entry_) (*s->entry_)(me);
+        if (s->entry_) {
+            (*s->entry_)(me);
+        }
         --ip;
     }
 
@@ -64,7 +66,9 @@ void SM_Hsm_init_(SM_Hsm * const me, SM_InitHandler initial_) SM_HSM_RETT {
         for (i = ip; i >= 0; --i) {
             s = (SM_StatePtr)(path[i]);
             me->curr = s;
-            if (s->entry_) (*s->entry_)(me);
+            if (s->entry_) {
+                (*s->entry_)(me);
+            }
         }
     }
 }
@@ -86,12 +90,19 @@ void SM_Hsm_dispatch_(SM_Hsm * const me,
     while (s != (SM_StatePtr)0) {
         ret = (*(((SM_StatePtr)(s))->handler_))(me, e);
         switch (ret) {
-            case SM_RET_HANDLED: return;
-            case SM_RET_SUPER:   s = ((SM_StatePtr)(s))->super; break;
+            case SM_RET_HANDLED: {
+                return;
+            }
+            case SM_RET_SUPER: {
+                s = ((SM_StatePtr)(s))->super;
+                break;
+            }
             case SM_RET_TRAN:
-            case SM_RET_TRAN_HIST: SM_Hsm_transition_(me,
-                                                      s, me->next);
-                                   return;
+            case SM_RET_TRAN_HIST: {
+                SM_Hsm_transition_(me,
+                                   s, me->next);
+                return;
+            }
             default: {
                 // Illegal return code from state handler.
                 SM_ERROR("Whip.");
@@ -111,6 +122,8 @@ static void SM_Hsm_transition_(SM_Hsm * const me,
     SM_StatePtr s;
     signed char ip;
     signed char i;
+    bool LCAFound;
+    bool bReachedSource;
 
     SM_REQUIRE(me != (SM_Hsm *)0);
     SM_REQUIRE((SM_StatePtr)(source) != (SM_StatePtr)0);
@@ -150,8 +163,8 @@ static void SM_Hsm_transition_(SM_Hsm * const me,
         i = 0;
     } else {
         // Complex transition ------------------------------------------------
-        bool LCAFound = false;
-        bool bReachedSource = false;
+        LCAFound = false;
+        bReachedSource = false;
 
         // Exit curr → source.
         s = me->curr;
