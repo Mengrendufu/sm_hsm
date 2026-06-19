@@ -440,12 +440,12 @@ static SM_RetState SmHsmTst_s222_(SM_Hsm * const me,
 //..........................................................................
 static void SM_Hsm_test_dispatch(enum SmHsmTstSig sig) {
     SmHsmTstEvt e;
-    e.sig = sig;
-    (*SmHsmTst_inst.dispatch)(&SmHsmTst_inst, &e);
+    e.sig = (uint8_t)sig;
+    SmHsmTst_dispatch(&SmHsmTst_inst, &e);
 }
 void SmHsmTst_test(void) {
     SmHsmTst_ctor();
-    (*SmHsmTst_inst.init)(&SmHsmTst_inst, (SmHsmTstEvt *)0);
+    SmHsmTst_init(&SmHsmTst_inst, (SmHsmTstEvt *)0);
 
     // A B C D E E F G H I J K L I M N O P N
     BSP_print("\n");
