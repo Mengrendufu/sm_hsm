@@ -126,15 +126,15 @@ SM_StatePtr SM_Hsm_childState_(SM_Hsm * const me,
 //   typedef struct {
 //       SM_Hsm sm_hsm_;
 //       uint8_t foo;
-//       SM_StatePtr hist_s2;   // history of s2
-//       SM_StatePtr shist_s2;  // shallow history of s2
+//       SM_StatePtr hist_s2;   // shallow history of s2
+//       SM_StatePtr hist_s22;  // deep history of s22
 //   } SmHsmTst;
 //
-// --- Deep history: restore the innermost active sub-state ------------
+// --- Shallow history: restore only the direct child of s2 ------------
 //
 //   void SmHsmTst_s2_exit_(SM_Hsm * const me) SM_HSM_RETT {
 //       SmHsmTst *ao = container_of(me, SmHsmTst, sm_hsm_);
-//       ao->hist_s2 = me->curr;  // curr == s211, deepest active state
+//       ao->hist_s2 = SM_Hsm_childState_(me, &SmHsmTst_s2);
 //   }
 //
 //   case H_SIG: {
@@ -142,16 +142,16 @@ SM_StatePtr SM_Hsm_childState_(SM_Hsm * const me,
 //       return _SM_HIST(ao->hist_s2);
 //   }
 //
-// --- Shallow history: restore only the direct child of s2 ------------
+// --- Deep history: restore the innermost active sub-state ------------
 //
-//   void SmHsmTst_s2_exit_(SM_Hsm * const me) SM_HSM_RETT {
+//   void SmHsmTst_s22_exit_(SM_Hsm * const me) SM_HSM_RETT {
 //       SmHsmTst *ao = container_of(me, SmHsmTst, sm_hsm_);
-//       ao->shist_s2 = SM_Hsm_childState_(me, &SmHsmTst_s2);
+//       ao->hist_s22 = me->curr;  // curr == s221, deepest active state
 //   }
 //
 //   case H_SIG: {
 //       SmHsmTst *ao = container_of(me, SmHsmTst, sm_hsm_);
-//       return _SM_HIST(ao->shist_s2);
+//       return _SM_HIST(ao->hist_s22);
 //   }
 //
 // Both macros return SM_RET_HIST; dispatch handles it identically
