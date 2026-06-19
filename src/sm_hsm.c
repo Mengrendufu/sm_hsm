@@ -122,7 +122,7 @@ static void SM_Hsm_transition_(SM_Hsm * const me,
     SM_StatePtr s;
     signed char ip;
     signed char i;
-    bool LCAFound;
+    bool bLCAFound;
     bool bReachedSource;
 
     SM_REQUIRE(me != (SM_Hsm *)0);
@@ -163,7 +163,7 @@ static void SM_Hsm_transition_(SM_Hsm * const me,
         i = 0;
     } else {
         // Complex transition ------------------------------------------------
-        LCAFound = false;
+        bLCAFound = false;
         bReachedSource = false;
 
         // Exit curr → source.
@@ -187,11 +187,11 @@ static void SM_Hsm_transition_(SM_Hsm * const me,
             while (s != (SM_StatePtr)0) {
                 for (i = 0; i <= ip; ++i) {
                     if (s == path[i]) {
-                        LCAFound = true;
+                        bLCAFound = true;
                         break;
                     }
                 }
-                if (LCAFound) {
+                if (bLCAFound) {
                     break;
                 }
                 if (((SM_StatePtr)(s))->exit_) {
@@ -200,7 +200,7 @@ static void SM_Hsm_transition_(SM_Hsm * const me,
                 s = ((SM_StatePtr)s)->super;
             }
 
-            if (!LCAFound) {
+            if (!bLCAFound) {
                 i = ++ip;
             }
         }
