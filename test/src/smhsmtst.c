@@ -161,7 +161,6 @@ SM_HsmState SM_HSM_ROM SmHsmTst_s222 = {
 //..........................................................................
 // Instance
 SmHsmTst SmHsmTst_inst;
-SM_Hsm * AO_SmHsmTst = &SmHsmTst_inst.sm_hsm_;
 // functions
 static void SmHsmTst_init(SmHsmTst * const me,
                           SmHsmTstEvt const * const e) SM_HSM_RETT {
