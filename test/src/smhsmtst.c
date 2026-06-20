@@ -209,16 +209,16 @@ static SM_RetState SmHsmTst_s1_(SM_Hsm * const me,
                                 SmHsmTstEvt const * const e) SM_HSM_RETT {
     switch (SMHSMTST_SIG(e)) {
         case A_SIG: {
-            BSP_print("s1-A::");
+            BSP_print("s1-A    ::");
             return _SM_TRAN(&SmHsmTst_s2);
         }
         case N_SIG: {
             SmHsmTst *ao = container_of(me, SmHsmTst, sm_hsm_);
-            BSP_print("s1-N::");
+            BSP_print("s1-N    ::");
             return _SM_HIST(ao->hist_s22);
         }
         case L_SIG: {
-            BSP_print("s1-L::");
+            BSP_print("s1-L    ::");
             return _SM_TRAN(&SmHsmTst_s12);
         }
         default: {
@@ -240,7 +240,7 @@ static SM_RetState SmHsmTst_s11_(SM_Hsm * const me,
                                  SmHsmTstEvt const * const e) SM_HSM_RETT {
     switch (SMHSMTST_SIG(e)) {
         case H_SIG: {
-            BSP_print("s11-H::");
+            BSP_print("s11-H   ::");
             return _SM_TRAN(&SmHsmTst_s12);
         }
         default: {
@@ -263,7 +263,7 @@ static SM_RetState SmHsmTst_s12_(SM_Hsm * const me,
     switch (SMHSMTST_SIG(e)) {
         case I_SIG: {
             SmHsmTst *ao = container_of(me, SmHsmTst, sm_hsm_);
-            BSP_print("s12-I::");
+            BSP_print("s12-I   ::");
             return _SM_HIST(ao->hist_s2);
         }
         default: {
@@ -291,15 +291,15 @@ static SM_RetState SmHsmTst_s2_(SM_Hsm * const me,
                                 SmHsmTstEvt const * const e) SM_HSM_RETT {
     switch (SMHSMTST_SIG(e)) {
         case F_SIG: {
-            BSP_print("s2-F::");
+            BSP_print("s2-F    ::");
             return _SM_TRAN(&SmHsmTst_s21);
         }
         case G_SIG: {
-            BSP_print("s2-G::");
+            BSP_print("s2-G    ::");
             return _SM_TRAN(&SmHsmTst_s1);
         }
         case K_SIG: {
-            BSP_print("s2-K::");
+            BSP_print("s2-K    ::");
             return _SM_TRAN(&SmHsmTst_s1);
         }
         default: {
@@ -321,7 +321,7 @@ static SM_RetState SmHsmTst_s21_(SM_Hsm * const me,
                                  SmHsmTstEvt const * const e) SM_HSM_RETT {
     switch (SMHSMTST_SIG(e)) {
         case J_SIG: {
-            BSP_print("s21-J::");
+            BSP_print("s21-J   ::");
             return _SM_TRAN(&SmHsmTst_s22);
         }
         default: {
@@ -352,17 +352,17 @@ static SM_RetState SmHsmTst_s22_(SM_Hsm * const me,
             SmHsmTst *ao = container_of(me, SmHsmTst, sm_hsm_);
             if (!ao->foo) {
                 ao->foo = true;
-                BSP_print("s22-E::");
+                BSP_print("s22-E   ::");
                 return _SM_HANDLED();
             }
             return _SM_SUPER();
         }
         case M_SIG: {
-            BSP_print("s22-M::");
+            BSP_print("s22-M   ::");
             return _SM_TRAN(&SmHsmTst_s1);
         }
         case O_SIG: {
-            BSP_print("s22-O::");
+            BSP_print("s22-O   ::");
             return _SM_TRAN(&SmHsmTst_s222);
         }
         default: {
@@ -384,28 +384,28 @@ static SM_RetState SmHsmTst_s221_(SM_Hsm * const me,
                                   SmHsmTstEvt const * const e) SM_HSM_RETT {
     switch (SMHSMTST_SIG(e)) {
         case B_SIG: {
-            BSP_print("s221-B::");
+            BSP_print("s221-B  ::");
             return _SM_TRAN(&SmHsmTst_s221);
         }
         case C_SIG: {
-            BSP_print("s221-C::");
+            BSP_print("s221-C  ::");
             return _SM_TRAN(&SmHsmTst_s22);
         }
         case D_SIG: {
-            BSP_print("s221-D::");
+            BSP_print("s221-D  ::");
             return _SM_TRAN(&SmHsmTst_s2);
         }
         case E_SIG: {
             SmHsmTst *ao = container_of(me, SmHsmTst, sm_hsm_);
             if (ao->foo) {
                 ao->foo = false;
-                BSP_print("s221-E::");
+                BSP_print("s221-E  ::");
                 return _SM_HANDLED();
             }
             return _SM_SUPER();
         }
         case J_SIG: {
-            BSP_print("s221-J::");
+            BSP_print("s221-J  ::");
             return _SM_TRAN(&SmHsmTst_s21);
         }
         default: {
@@ -427,7 +427,7 @@ static SM_RetState SmHsmTst_s222_(SM_Hsm * const me,
                                   SmHsmTstEvt const * const e) SM_HSM_RETT {
     switch (SMHSMTST_SIG(e)) {
         case P_SIG: {
-            BSP_print("s222-P::");
+            BSP_print("s222-P  ::");
             return _SM_TRAN(&SmHsmTst_s1);
         }
         default: {
