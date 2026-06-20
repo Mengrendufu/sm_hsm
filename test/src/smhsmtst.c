@@ -195,6 +195,7 @@ static SM_StatePtr SmHsmTst_TOP_initial_(SM_Hsm * const me) SM_HSM_RETT {
 // s1 ........................................................................
 static SM_StatePtr SmHsmTst_s1_init_(SM_Hsm * const me) SM_HSM_RETT {
     (void)me;
+    BSP_print("s1-INIT ::");
     return _SM_INIT(&SmHsmTst_s11);
 }
 static void SmHsmTst_s1_entry_(SM_Hsm * const me) SM_HSM_RETT {
@@ -275,6 +276,7 @@ static SM_RetState SmHsmTst_s12_(SM_Hsm * const me,
 // s2 ........................................................................
 static SM_StatePtr SmHsmTst_s2_init_(SM_Hsm * const me) SM_HSM_RETT {
     (void)me;
+    BSP_print("s2-INIT ::");
     return _SM_INIT(&SmHsmTst_s221);
 }
 static void SmHsmTst_s2_entry_(SM_Hsm * const me) SM_HSM_RETT {
@@ -333,6 +335,7 @@ static SM_RetState SmHsmTst_s21_(SM_Hsm * const me,
 // s22 .......................................................................
 static SM_StatePtr SmHsmTst_s22_init_(SM_Hsm * const me) SM_HSM_RETT {
     (void)me;
+    BSP_print("s22-INIT ::");
     return _SM_INIT(&SmHsmTst_s221);
 }
 static void SmHsmTst_s22_entry_(SM_Hsm * const me) SM_HSM_RETT {
@@ -439,25 +442,25 @@ static SM_RetState SmHsmTst_s222_(SM_Hsm * const me,
 //..........................................................................
 // Expected output for sequence  A B C D E E F G H I J K L I M N O P N :
 //
-//  top-INIT::s1-ENTRY.s11-ENTRY.
-//  s1-A    ::s11-EXIT.s1-EXIT.s2-ENTRY.s22-ENTRY.s221-ENTRY.
+//  top-INIT::s1-ENTRY.s1-INIT ::s11-ENTRY.
+//  s1-A    ::s11-EXIT.s1-EXIT.s2-ENTRY.s2-INIT ::s22-ENTRY.s221-ENTRY.
 //  s221-B  ::s221-EXIT.s221-ENTRY.
-//  s221-C  ::s221-EXIT.s221-ENTRY.
-//  s221-D  ::s221-EXIT.s22-EXIT.s22-ENTRY.s221-ENTRY.
+//  s221-C  ::s221-EXIT.s22-INIT ::s221-ENTRY.
+//  s221-D  ::s221-EXIT.s22-EXIT.s2-INIT ::s22-ENTRY.s221-ENTRY.
 //  s22-E   ::
 //  s221-E  ::
 //  s2-F    ::s221-EXIT.s22-EXIT.s21-ENTRY.
-//  s2-G    ::s21-EXIT.s2-EXIT.s1-ENTRY.s11-ENTRY.
+//  s2-G    ::s21-EXIT.s2-EXIT.s1-ENTRY.s1-INIT ::s11-ENTRY.
 //  s11-H   ::s11-EXIT.s12-ENTRY.
 //  s12-I   ::s12-EXIT.s1-EXIT.s2-ENTRY.s21-ENTRY.
-//  s21-J   ::s21-EXIT.s22-ENTRY.s221-ENTRY.
-//  s2-K    ::s221-EXIT.s22-EXIT.s2-EXIT.s1-ENTRY.s11-ENTRY.
+//  s21-J   ::s21-EXIT.s22-ENTRY.s22-INIT ::s221-ENTRY.
+//  s2-K    ::s221-EXIT.s22-EXIT.s2-EXIT.s1-ENTRY.s1-INIT ::s11-ENTRY.
 //  s1-L    ::s11-EXIT.s12-ENTRY.
-//  s12-I   ::s12-EXIT.s1-EXIT.s2-ENTRY.s22-ENTRY.s221-ENTRY.
-//  s22-M   ::s221-EXIT.s22-EXIT.s2-EXIT.s1-ENTRY.s11-ENTRY.
+//  s12-I   ::s12-EXIT.s1-EXIT.s2-ENTRY.s22-ENTRY.s22-INIT ::s221-ENTRY.
+//  s22-M   ::s221-EXIT.s22-EXIT.s2-EXIT.s1-ENTRY.s1-INIT ::s11-ENTRY.
 //  s1-N    ::s11-EXIT.s1-EXIT.s2-ENTRY.s22-ENTRY.s221-ENTRY.
 //  s22-O   ::s221-EXIT.s222-ENTRY.
-//  s222-P  ::s222-EXIT.s22-EXIT.s2-EXIT.s1-ENTRY.s11-ENTRY.
+//  s222-P  ::s222-EXIT.s22-EXIT.s2-EXIT.s1-ENTRY.s1-INIT ::s11-ENTRY.
 //  s1-N    ::s11-EXIT.s1-EXIT.s2-ENTRY.s22-ENTRY.s222-ENTRY.
 //
 static void SM_Hsm_test_dispatch(enum SmHsmTstSig sig) {
