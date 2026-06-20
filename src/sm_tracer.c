@@ -63,13 +63,13 @@ void SM_Tracer_ctor(SM_Tracer * const me,
     me->nMin = me->nTot;
 
     // Queue init...
-    SM_REQUIRE(qSto != (void *)0);
+    SM_REQUIRE((qSto != (void *)0) && (qLen > 0));
     me->ring  = (void **)qSto;
     me->head  = 0;
     me->tail  = 0;
-    me->qLen  = qLen;
+    me->qEnd  = qLen - 1U;
     me->nUsed = 0;
-    me->qMin  = me->qLen;
+    me->qMin  = me->qEnd + 1U;
 
     // Idle running control block...
     me->traceSeq = 0;
@@ -77,24 +77,17 @@ void SM_Tracer_ctor(SM_Tracer * const me,
 }
 
 //............................................................................
-//! @static @public @memberof SM_Tracer
-static unsigned char SM_Tracer_is_esc(unsigned char byte_) {
-    if ((byte_ == 0x7E) || (byte_ == 0x7D)) return 1U;
-    else                                    return 0U;
-}
+//! @public @memberof SM_Tracer
+#define SM_TRACER_IS_ESC_(byte_)  (((byte_) == 0x7E) || ((byte_) == 0x7D))
 
 //............................................................................
 //! @static @public @memberof SM_Tracer
-static void SM_Tracer_flush(unsigned char byte_, unsigned char optEsc) {
-    if (optEsc) { // Escape needed?
-        if (SM_Tracer_is_esc(byte_)) {  // Escape confirm?
-            SM_Tracer_flush_byte_(0x7D);
-            SM_Tracer_flush_byte_(0x20 ^ byte_);
-        } else {
-            SM_Tracer_flush_byte_(byte_);
-        }
+static void SM_Tracer_escFlush_(unsigned char byte_) {
+    if (SM_TRACER_IS_ESC_(byte_)) {
+        SM_Tracer_flushByte_(0x7D);
+        SM_Tracer_flushByte_(0x20 ^ byte_);
     } else {
-        SM_Tracer_flush_byte_(byte_);
+        SM_Tracer_flushByte_(byte_);
     }
 }
 
@@ -126,26 +119,35 @@ void SM_Trace_push(SM_Tracer * const me, unsigned char *pfb) SMT_REET {
 
         SMT_CRITICAL_SECTION_ENTRY();
 
-        if (me->nUsed < me->qLen) {  // Not full.
+        if (me->nUsed <= me->qEnd) {  // Not full.
             me->ring[me->head] = (void *)pfb;
-            if (me->head == 0) me->head = me->qLen;
-            --me->head;
+            if (me->head == 0) {
+                me->head = me->qEnd;
+            } else {
+                --me->head;
+            }
             ++me->nUsed;
-            if (me->qMin > me->qLen - me->nUsed) {
-                me->qMin = me->qLen - me->nUsed;
+            if (me->qMin > me->qEnd + 1U - me->nUsed) {
+                me->qMin = me->qEnd + 1U - me->nUsed;
             }
         } else { // Full.
             // GC...
             ((void **)(me->ring[me->tail]))[0] = (void *)me->freeHead;
             me->freeHead = (void **)me->ring[me->tail];
             ++me->nFree;
-            if (me->tail == 0) me->tail = me->qLen;
-            --me->tail;
+            if (me->tail == 0) {
+                me->tail = me->qEnd;
+            } else {
+                --me->tail;
+            }
 
             // Newest one...
             me->ring[me->head] = (void *)pfb;
-            if (me->head == 0) me->head = me->qLen;
-            --me->head;
+            if (me->head == 0) {
+                me->head = me->qEnd;
+            } else {
+                --me->head;
+            }
         }
 
         SMT_CRITICAL_SECTION_EXIT();
@@ -170,30 +172,32 @@ void SM_Tracer_idle(SM_Tracer * const me) {
             SM_ENSURE(me->currCnt <= me->blockSize);
 
             // Refresh...
-            if (me->tail == 0) me->tail = me->qLen;
-            --me->tail;
+            if (me->tail == 0) {
+                me->tail = me->qEnd;
+            } else {
+                --me->tail;
+            }
             --me->nUsed;
 
             SMT_CRITICAL_SECTION_EXIT();
 
             // [0x7E] [seq]...
-            SM_Tracer_flush(0x7E, 0);
+            SM_Tracer_flushByte_(0x7E);
             me->chksumIter = 0;
             me->chksumIter += me->traceSeq++;
-            SM_Tracer_flush(me->chksumIter, 1);
+            SM_Tracer_escFlush_(me->chksumIter);
 
             // RecID...
             me->chksumIter += me->currBuf[me->currLen - me->currCnt--];
-            SM_Tracer_flush(me->currBuf[me->currLen - me->currCnt - 1],
-                            1);
+            SM_Tracer_escFlush_(me->currBuf[me->currLen - me->currCnt - 1]);
         } else {
             SMT_CRITICAL_SECTION_EXIT();
         }
     } else {
         if (me->currCnt == 0) {
             // [CHKSUM] [0x7E].
-            SM_Tracer_flush(~(me->chksumIter), 1);
-            SM_Tracer_flush(0x7E, 0);
+            SM_Tracer_escFlush_(~(me->chksumIter));
+            SM_Tracer_flushByte_(0x7E);
 
             SMT_CRITICAL_SECTION_ENTRY();
 
@@ -207,8 +211,7 @@ void SM_Tracer_idle(SM_Tracer * const me) {
         } else {
             // [pLen] [payload]...
             me->chksumIter += me->currBuf[me->currLen - me->currCnt--];
-            SM_Tracer_flush(me->currBuf[me->currLen - me->currCnt - 1],
-                            1);
+            SM_Tracer_escFlush_(me->currBuf[me->currLen - me->currCnt - 1]);
         }
     }
 }

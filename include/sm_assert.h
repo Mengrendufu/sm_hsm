@@ -21,7 +21,7 @@ extern "C" {
         #define SM_ROM const
     #endif // ndef SM_ROM
 
-    #define SM_DEFINE_MODULE(name_)                                          \
+    #define SM_DEFINE_MODULE(name_) \
                              static char SM_ROM SM_module_name_[] = name_;
 
     #define SM_ERROR(dummy_) (SM_onAssert(SM_module_name_, __LINE__))

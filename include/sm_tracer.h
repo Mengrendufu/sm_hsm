@@ -41,9 +41,9 @@ typedef struct SM_Tracer {
     unsigned char nMin;           //!< @protected @memberof SM_Tracer
 
     void * * ring;                //!< @protected @memberof SM_Tracer
+    unsigned char qEnd;           //!< @protected @memberof SM_Tracer
     unsigned char volatile head;  //!< @protected @memberof SM_Tracer
     unsigned char volatile tail;  //!< @protected @memberof SM_Tracer
-    unsigned char qLen;           //!< @protected @memberof SM_Tracer
     unsigned char volatile nUsed; //!< @protected @memberof SM_Tracer
     unsigned char qMin;           //!< @protected @memberof SM_Tracer
 
@@ -72,31 +72,31 @@ unsigned char *SM_Trace_getBlock(SM_Tracer * const me) SMT_REET;
 void SM_Trace_push(SM_Tracer * const me, unsigned char *pfb) SMT_REET;
 
 //! @public @memberof SM_Tracer
-void SM_Tracer_idle(SM_Tracer *me);
+void SM_Tracer_idle(SM_Tracer * const me);
 
 //============================================================================
 //! @brief Macros in hand.
 //! @cond EXTERNAL
 
-#define SM_TRACE_BEGIN(recId_, dateLen_) do {                                \
-    unsigned char *fb_;                                                      \
-    unsigned char offset_;                                                   \
-    offset_ = 0;                                                             \
-    fb_ = SM_Trace_getBlock(&SM_Tracer_inst);                                \
-    fb_ ? fb_[offset_++] = ((unsigned char)(recId_))   : (void)0;            \
+#define SM_TRACE_BEGIN(recId_, dateLen_) do { \
+    unsigned char *fb_; \
+    unsigned char offset_; \
+    offset_ = 0; \
+    fb_ = SM_Trace_getBlock(&SM_Tracer_inst); \
+    fb_ ? fb_[offset_++] = ((unsigned char)(recId_))   : (void)0; \
     fb_ ? fb_[offset_++] = ((unsigned char)(dateLen_)) : (void)0;
 
-#define SM_TRACE_PAYLOAD_BE(payload_)                                        \
+#define SM_TRACE_PAYLOAD_BE(payload_) \
     fb_ ? fb_[offset_++] = ((unsigned char)(payload_)) : (void)0;
 
-#define SM_TRACE_END(dummy_)                                                 \
-    SM_Trace_push(&SM_Tracer_inst, fb_);                                     \
+#define SM_TRACE_END(dummy_) \
+    SM_Trace_push(&SM_Tracer_inst, fb_); \
 } while (0);
 
 //! @endcond
 
 // BSP =======================================================================
 //! @public @memberof SM_Tracer
-void SM_Tracer_flush_byte_(unsigned char byte_);
+void SM_Tracer_flushByte_(unsigned char byte_);
 
 #endif // SM_TRACER_H_
