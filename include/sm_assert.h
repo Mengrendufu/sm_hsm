@@ -18,11 +18,11 @@ extern "C" {
 #ifndef SM_DBC_DISABLE
 
     #ifndef SM_ROM
-        #define SM_ROM const
+    #define SM_ROM const
     #endif // ndef SM_ROM
 
     #define SM_DEFINE_MODULE(name_) \
-                             static char SM_ROM SM_module_name_[] = name_;
+        static char SM_ROM SM_module_name_[] = name_;
 
     #define SM_ERROR(dummy_) (SM_onAssert(SM_module_name_, __LINE__))
     #define SM_ASSERT(cond_) ((cond_) ? (void)0 : SM_ERROR("Error."))
@@ -32,11 +32,11 @@ extern "C" {
     //! @cond INTERNAL
 
     #ifndef SM_NORETURN
-        #define SM_NORETURN void
+    #define SM_NORETURN void
     #endif // ndef SM_NORETURN
 
     #ifndef SM_RETT
-        #define SM_RETT
+    #define SM_RETT
     #endif // ndef SM_RETT
 
     SM_NORETURN SM_onAssert(char const *module, int label) SM_RETT;

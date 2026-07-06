@@ -20,11 +20,11 @@
 //! @cond INTERNAL
 
 #ifndef SM_HSM_ROM
-    #define SM_HSM_ROM const
+#define SM_HSM_ROM const
 #endif // SM_HSM_ROM
 
 #ifndef SM_HSM_RETT
-    #define SM_HSM_RETT
+#define SM_HSM_RETT
 #endif // SM_HSM_RETT
 
 //! @endcond
@@ -33,11 +33,11 @@
 //! @brief Event processing return.
 //! @cond INTERNAL
 
-typedef unsigned char SM_RetState;
+typedef unsigned char  SM_RetState;
 #define SM_RET_HANDLED 0
 #define SM_RET_TRAN    1
 #define SM_RET_SUPER   2
-#define SM_RET_HIST 3
+#define SM_RET_HIST    3
 
 //! @endcond
 
@@ -83,13 +83,13 @@ typedef struct SM_Hsm {
 #define _SM_HANDLED()     (SM_RET_HANDLED)
 #define _SM_SUPER()       (SM_RET_SUPER)
 #define _SM_TRAN(target_) ((((SM_Hsm *)(me))->next) = (target_), SM_RET_TRAN)
-#define _SM_HIST(hist_) ((((SM_Hsm *)(me))->next) = (hist_), SM_RET_HIST)
+#define _SM_HIST(hist_)   ((((SM_Hsm *)(me))->next) = (hist_), SM_RET_HIST)
 #define _SM_INIT(target_) (target_) // Top-init and state-init only
 
 //============================================================================
 // Deepest nest level for HSM, TOP state exclude
 #ifndef SM_MAX_NEST_DEPTH_
-    #define SM_MAX_NEST_DEPTH_ 5
+#define SM_MAX_NEST_DEPTH_ 5
 #endif // SM_MAX_NEST_DEPTH_
 
 //............................................................................

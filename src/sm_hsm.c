@@ -103,11 +103,9 @@ void SM_Hsm_dispatch_(SM_Hsm * const me,
                                    s, me->next);
                 return;
             }
-            default: {
-                // Illegal return code from state handler.
-                SM_ERROR("Whip.");
-                break;
-            }
+
+            // Illegal return code from state handler.
+            SM_ERROR("Whip.");
         }
     }
 }
@@ -128,7 +126,7 @@ static void SM_Hsm_transition_(SM_Hsm * const me,
     SM_REQUIRE((SM_StatePtr)(source) != (SM_StatePtr)0);
     SM_REQUIRE((SM_StatePtr)(target) != (SM_StatePtr)0);
 
-    // Build entry path: target → root.
+    // Build entry path: target -> root.
     ip = -1;
     s = target;
     while (s != (SM_StatePtr)0) {
@@ -137,13 +135,10 @@ static void SM_Hsm_transition_(SM_Hsm * const me,
         s = ((SM_StatePtr)(s))->super;
     }
 
-    // Exit curr → source (exclusive).  Shared by all transition types.
+    // Exit curr -> source (exclusive).  Shared by all transition types.
     s = me->curr;
     while (s != source) {
-        if (s == (SM_StatePtr)0) {
-            SM_ERROR("Punishment.");
-            return;
-        }
+        SM_REQUIRE(s != (SM_StatePtr)0);
         if (((SM_StatePtr)(s))->exit_) {
             (*(((SM_StatePtr)(s))->exit_))(me);
         }
@@ -196,9 +191,7 @@ static void SM_Hsm_transition_(SM_Hsm * const me,
             s = ((SM_StatePtr)s)->super;
         }
 
-        if (!bLCAFound) {
-            i = ++ip;
-        }
+        SM_ENSURE(bLCAFound);
     }
 
     while (--i >= 0) {
