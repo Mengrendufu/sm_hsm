@@ -92,7 +92,14 @@ typedef struct SM_Hsm {
 #define SM_MAX_NEST_DEPTH_ 5
 #endif // SM_MAX_NEST_DEPTH_
 
-//............................................................................
+//============================================================================
+//! @brief Virtual root marker.
+//!
+//! A state whose @c super is SM_HSM_TOP is a top-level state. There is no
+//! actual TOP state object; this is only a readable alias for NULL.
+#define SM_HSM_TOP ((SM_StatePtr)NULL)
+
+//============================================================================
 //! @brief Virtual pointer of SM_Hsm_init_ and SM_Hsm_dispatch_.
 //! @cond INTERNAL
 

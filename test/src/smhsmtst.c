@@ -64,7 +64,7 @@ static void SmHsmTst_s1_entry_(SM_Hsm * const me) SM_HSM_RETT;
 static void SmHsmTst_s1_exit_(SM_Hsm * const me) SM_HSM_RETT;
 static SM_RetState SmHsmTst_s1_(SM_Hsm * const me, SmHsmTstEvt const * const e) SM_HSM_RETT;
 SM_HsmState SM_HSM_ROM SmHsmTst_s1 = {
-    (SM_StatePtr)NULL,                     // super
+    SM_HSM_TOP,                            // super
     (SM_InitHandler)&SmHsmTst_s1_init_,    // init_
     (SM_ActionHandler)&SmHsmTst_s1_entry_, // entry_
     (SM_ActionHandler)&SmHsmTst_s1_exit_,  // exit_
@@ -98,7 +98,7 @@ static void SmHsmTst_s2_entry_(SM_Hsm * const me) SM_HSM_RETT;
 static void SmHsmTst_s2_exit_(SM_Hsm * const me) SM_HSM_RETT;
 static SM_RetState SmHsmTst_s2_(SM_Hsm * const me, SmHsmTstEvt const * const e) SM_HSM_RETT;
 SM_HsmState SM_HSM_ROM SmHsmTst_s2 = {
-    (SM_StatePtr)NULL,                     // super (= top)
+    SM_HSM_TOP,                            // super (= top)
     (SM_InitHandler)&SmHsmTst_s2_init_,    // init_
     (SM_ActionHandler)&SmHsmTst_s2_entry_, // entry_
     (SM_ActionHandler)&SmHsmTst_s2_exit_,  // exit_
