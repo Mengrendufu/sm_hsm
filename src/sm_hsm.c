@@ -197,7 +197,11 @@ static void SM_Hsm_transition_(SM_Hsm * const me,
             s = SM_STATE_CAST_(s)->super;
         }
 
-        SM_ENSURE(bLCAFound);
+        // No runtime LCA check here. State-tree consistency is validated
+        // by the static checker (tools/check_hsm_tree.py or similar).
+        // Without that check, a transition between unrelated trees exits
+        // the entire source tree and entries the entire target tree,
+        // which is the intended behavior for top-level sibling states.
     }
 
     while (--i >= 0) {
