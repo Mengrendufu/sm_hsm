@@ -62,8 +62,7 @@ static SM_StatePtr SmHsmTst_TOP_initial_(SM_Hsm * const me) SM_HSM_RETT;
 static SM_StatePtr SmHsmTst_s1_init_(SM_Hsm * const me) SM_HSM_RETT;
 static void SmHsmTst_s1_entry_(SM_Hsm * const me) SM_HSM_RETT;
 static void SmHsmTst_s1_exit_(SM_Hsm * const me) SM_HSM_RETT;
-static SM_RetState SmHsmTst_s1_(SM_Hsm * const me,
-                                SmHsmTstEvt const * const e) SM_HSM_RETT;
+static SM_RetState SmHsmTst_s1_(SM_Hsm * const me, SmHsmTstEvt const * const e) SM_HSM_RETT;
 SM_HsmState SM_HSM_ROM SmHsmTst_s1 = {
     (SM_StatePtr)NULL,                     // super
     (SM_InitHandler)&SmHsmTst_s1_init_,    // init_
@@ -74,8 +73,7 @@ SM_HsmState SM_HSM_ROM SmHsmTst_s1 = {
 // s11
 static void SmHsmTst_s11_entry_(SM_Hsm * const me) SM_HSM_RETT;
 static void SmHsmTst_s11_exit_(SM_Hsm * const me) SM_HSM_RETT;
-static SM_RetState SmHsmTst_s11_(SM_Hsm * const me,
-                                 SmHsmTstEvt const * const e) SM_HSM_RETT;
+static SM_RetState SmHsmTst_s11_(SM_Hsm * const me, SmHsmTstEvt const * const e) SM_HSM_RETT;
 SM_HsmState SM_HSM_ROM SmHsmTst_s11 = {
     (SM_StatePtr)&SmHsmTst_s1,              // super
     (SM_InitHandler)NULL,                   // init_
@@ -86,8 +84,7 @@ SM_HsmState SM_HSM_ROM SmHsmTst_s11 = {
 // s12
 static void SmHsmTst_s12_entry_(SM_Hsm * const me) SM_HSM_RETT;
 static void SmHsmTst_s12_exit_(SM_Hsm * const me) SM_HSM_RETT;
-static SM_RetState SmHsmTst_s12_(SM_Hsm * const me,
-                                 SmHsmTstEvt const * const e) SM_HSM_RETT;
+static SM_RetState SmHsmTst_s12_(SM_Hsm * const me, SmHsmTstEvt const * const e) SM_HSM_RETT;
 SM_HsmState SM_HSM_ROM SmHsmTst_s12 = {
     (SM_StatePtr)&SmHsmTst_s1,              // super
     (SM_InitHandler)NULL,                   // init_
@@ -99,8 +96,7 @@ SM_HsmState SM_HSM_ROM SmHsmTst_s12 = {
 static SM_StatePtr SmHsmTst_s2_init_(SM_Hsm * const me) SM_HSM_RETT;
 static void SmHsmTst_s2_entry_(SM_Hsm * const me) SM_HSM_RETT;
 static void SmHsmTst_s2_exit_(SM_Hsm * const me) SM_HSM_RETT;
-static SM_RetState SmHsmTst_s2_(SM_Hsm * const me,
-                                SmHsmTstEvt const * const e) SM_HSM_RETT;
+static SM_RetState SmHsmTst_s2_(SM_Hsm * const me, SmHsmTstEvt const * const e) SM_HSM_RETT;
 SM_HsmState SM_HSM_ROM SmHsmTst_s2 = {
     (SM_StatePtr)NULL,                     // super (= top)
     (SM_InitHandler)&SmHsmTst_s2_init_,    // init_
@@ -111,8 +107,7 @@ SM_HsmState SM_HSM_ROM SmHsmTst_s2 = {
 // s21
 static void SmHsmTst_s21_entry_(SM_Hsm * const me) SM_HSM_RETT;
 static void SmHsmTst_s21_exit_(SM_Hsm * const me) SM_HSM_RETT;
-static SM_RetState SmHsmTst_s21_(SM_Hsm * const me,
-                                 SmHsmTstEvt const * const e) SM_HSM_RETT;
+static SM_RetState SmHsmTst_s21_(SM_Hsm * const me, SmHsmTstEvt const * const e) SM_HSM_RETT;
 SM_HsmState SM_HSM_ROM SmHsmTst_s21 = {
     (SM_StatePtr)&SmHsmTst_s2,              // super
     (SM_InitHandler)NULL,                   // init_
@@ -124,8 +119,7 @@ SM_HsmState SM_HSM_ROM SmHsmTst_s21 = {
 static SM_StatePtr SmHsmTst_s22_init_(SM_Hsm * const me) SM_HSM_RETT;
 static void SmHsmTst_s22_entry_(SM_Hsm * const me) SM_HSM_RETT;
 static void SmHsmTst_s22_exit_(SM_Hsm * const me) SM_HSM_RETT;
-static SM_RetState SmHsmTst_s22_(SM_Hsm * const me,
-                                 SmHsmTstEvt const * const e) SM_HSM_RETT;
+static SM_RetState SmHsmTst_s22_(SM_Hsm * const me, SmHsmTstEvt const * const e) SM_HSM_RETT;
 SM_HsmState SM_HSM_ROM SmHsmTst_s22 = {
     (SM_StatePtr)&SmHsmTst_s2,              // super
     (SM_InitHandler)&SmHsmTst_s22_init_,    // init_
@@ -136,8 +130,7 @@ SM_HsmState SM_HSM_ROM SmHsmTst_s22 = {
 // s221
 static void SmHsmTst_s221_entry_(SM_Hsm * const me) SM_HSM_RETT;
 static void SmHsmTst_s221_exit_(SM_Hsm * const me) SM_HSM_RETT;
-static SM_RetState SmHsmTst_s221_(SM_Hsm * const me,
-                                  SmHsmTstEvt const * const e) SM_HSM_RETT;
+static SM_RetState SmHsmTst_s221_(SM_Hsm * const me, SmHsmTstEvt const * const e) SM_HSM_RETT;
 SM_HsmState SM_HSM_ROM SmHsmTst_s221 = {
     (SM_StatePtr)&SmHsmTst_s22,              // super
     (SM_InitHandler)NULL,                    // init_
@@ -148,8 +141,7 @@ SM_HsmState SM_HSM_ROM SmHsmTst_s221 = {
 // s222
 static void SmHsmTst_s222_entry_(SM_Hsm * const me) SM_HSM_RETT;
 static void SmHsmTst_s222_exit_(SM_Hsm * const me) SM_HSM_RETT;
-static SM_RetState SmHsmTst_s222_(SM_Hsm * const me,
-                                  SmHsmTstEvt const * const e) SM_HSM_RETT;
+static SM_RetState SmHsmTst_s222_(SM_Hsm * const me, SmHsmTstEvt const * const e) SM_HSM_RETT;
 SM_HsmState SM_HSM_ROM SmHsmTst_s222 = {
     (SM_StatePtr)&SmHsmTst_s22,              // super
     (SM_InitHandler)NULL,                    // init_
@@ -162,13 +154,11 @@ SM_HsmState SM_HSM_ROM SmHsmTst_s222 = {
 // Instance
 static SmHsmTst SmHsmTst_inst;
 // functions
-static void SmHsmTst_init(SmHsmTst * const me,
-                          SmHsmTstEvt const * const e) SM_HSM_RETT {
+static void SmHsmTst_init(SmHsmTst * const me, SmHsmTstEvt const * const e) SM_HSM_RETT {
     (void)e;
     SM_Hsm_init_(&me->sm_hsm_, (SM_InitHandler)SmHsmTst_TOP_initial_);
 }
-static void SmHsmTst_dispatch(SmHsmTst * const me,
-                              SmHsmTstEvt const * const e) SM_HSM_RETT {
+static void SmHsmTst_dispatch(SmHsmTst * const me, SmHsmTstEvt const * const e) SM_HSM_RETT {
     SM_Hsm_dispatch_(&me->sm_hsm_, e);
 }
 static void SmHsmTst_ctor(void) {
@@ -206,8 +196,7 @@ static void SmHsmTst_s1_exit_(SM_Hsm * const me) SM_HSM_RETT {
     (void)me;
     BSP_print("s1-EXIT.");
 }
-static SM_RetState SmHsmTst_s1_(SM_Hsm * const me,
-                                SmHsmTstEvt const * const e) SM_HSM_RETT {
+static SM_RetState SmHsmTst_s1_(SM_Hsm * const me, SmHsmTstEvt const * const e) SM_HSM_RETT {
     switch (SMHSMTST_SIG(e)) {
         case A_SIG: {
             BSP_print("s1-A    ::");
@@ -237,8 +226,7 @@ static void SmHsmTst_s11_exit_(SM_Hsm * const me) SM_HSM_RETT {
     (void)me;
     BSP_print("s11-EXIT.");
 }
-static SM_RetState SmHsmTst_s11_(SM_Hsm * const me,
-                                 SmHsmTstEvt const * const e) SM_HSM_RETT {
+static SM_RetState SmHsmTst_s11_(SM_Hsm * const me, SmHsmTstEvt const * const e) SM_HSM_RETT {
     switch (SMHSMTST_SIG(e)) {
         case H_SIG: {
             BSP_print("s11-H   ::");
@@ -259,8 +247,7 @@ static void SmHsmTst_s12_exit_(SM_Hsm * const me) SM_HSM_RETT {
     (void)me;
     BSP_print("s12-EXIT.");
 }
-static SM_RetState SmHsmTst_s12_(SM_Hsm * const me,
-                                 SmHsmTstEvt const * const e) SM_HSM_RETT {
+static SM_RetState SmHsmTst_s12_(SM_Hsm * const me, SmHsmTstEvt const * const e) SM_HSM_RETT {
     switch (SMHSMTST_SIG(e)) {
         case I_SIG: {
             SmHsmTst *ao = container_of(me, SmHsmTst, sm_hsm_);
@@ -289,8 +276,7 @@ static void SmHsmTst_s2_exit_(SM_Hsm * const me) SM_HSM_RETT {
     // save shallow history: direct child of s2
     ao->hist_s2 = SM_Hsm_childState_(me, &SmHsmTst_s2);
 }
-static SM_RetState SmHsmTst_s2_(SM_Hsm * const me,
-                                SmHsmTstEvt const * const e) SM_HSM_RETT {
+static SM_RetState SmHsmTst_s2_(SM_Hsm * const me, SmHsmTstEvt const * const e) SM_HSM_RETT {
     switch (SMHSMTST_SIG(e)) {
         case F_SIG: {
             BSP_print("s2-F    ::");
@@ -319,8 +305,7 @@ static void SmHsmTst_s21_exit_(SM_Hsm * const me) SM_HSM_RETT {
     (void)me;
     BSP_print("s21-EXIT.");
 }
-static SM_RetState SmHsmTst_s21_(SM_Hsm * const me,
-                                 SmHsmTstEvt const * const e) SM_HSM_RETT {
+static SM_RetState SmHsmTst_s21_(SM_Hsm * const me, SmHsmTstEvt const * const e) SM_HSM_RETT {
     switch (SMHSMTST_SIG(e)) {
         case J_SIG: {
             BSP_print("s21-J   ::");
@@ -348,8 +333,7 @@ static void SmHsmTst_s22_exit_(SM_Hsm * const me) SM_HSM_RETT {
     // save deep history: innermost active state
     ao->hist_s22 = me->curr;
 }
-static SM_RetState SmHsmTst_s22_(SM_Hsm * const me,
-                                 SmHsmTstEvt const * const e) SM_HSM_RETT {
+static SM_RetState SmHsmTst_s22_(SM_Hsm * const me, SmHsmTstEvt const * const e) SM_HSM_RETT {
     switch (SMHSMTST_SIG(e)) {
         case E_SIG: {
             SmHsmTst *ao = container_of(me, SmHsmTst, sm_hsm_);
@@ -383,8 +367,7 @@ static void SmHsmTst_s221_exit_(SM_Hsm * const me) SM_HSM_RETT {
     (void)me;
     BSP_print("s221-EXIT.");
 }
-static SM_RetState SmHsmTst_s221_(SM_Hsm * const me,
-                                  SmHsmTstEvt const * const e) SM_HSM_RETT {
+static SM_RetState SmHsmTst_s221_(SM_Hsm * const me, SmHsmTstEvt const * const e) SM_HSM_RETT {
     switch (SMHSMTST_SIG(e)) {
         case B_SIG: {
             BSP_print("s221-B  ::");
@@ -426,8 +409,7 @@ static void SmHsmTst_s222_exit_(SM_Hsm * const me) SM_HSM_RETT {
     (void)me;
     BSP_print("s222-EXIT.");
 }
-static SM_RetState SmHsmTst_s222_(SM_Hsm * const me,
-                                  SmHsmTstEvt const * const e) SM_HSM_RETT {
+static SM_RetState SmHsmTst_s222_(SM_Hsm * const me, SmHsmTstEvt const * const e) SM_HSM_RETT {
     switch (SMHSMTST_SIG(e)) {
         case P_SIG: {
             BSP_print("s222-P  ::");
