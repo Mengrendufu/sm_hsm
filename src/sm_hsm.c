@@ -14,6 +14,12 @@
 //============================================================================
 SM_DEFINE_MODULE("sm_hsm")
 
+//............................................................................
+// SM_StatePtr carries SM_HSM_ROM (const on host, const code on C51).
+// The explicit cast pins the pointer's storage space so C51 uses
+// memory-specific addressing (code *) instead of a generic 3-byte pointer.
+#define SM_STATE_CAST_(pstate_) ((SM_StatePtr)(pstate_))
+
 static void SM_Hsm_transition_(SM_Hsm * const me,
                                SM_StatePtr source,
                                SM_StatePtr target) SM_HSM_RETT;
@@ -38,11 +44,11 @@ void SM_Hsm_init_(SM_Hsm * const me, SM_InitHandler initial_) SM_HSM_RETT {
     while (s != (SM_StatePtr)0) {
         SM_REQUIRE(ip < (SM_MAX_NEST_DEPTH_ - 1));
         path[++ip] = s;
-        s = ((SM_StatePtr)s)->super;
+        s = SM_STATE_CAST_(s)->super;
     }
 
     while (ip >= 0) {
-        s = (SM_StatePtr)(path[ip]);
+        s = SM_STATE_CAST_(path[ip]);
         if (s->entry_) {
             (*s->entry_)(me);
         }
@@ -52,19 +58,19 @@ void SM_Hsm_init_(SM_Hsm * const me, SM_InitHandler initial_) SM_HSM_RETT {
     me->curr = target;
     me->next = (SM_StatePtr)0;
 
-    while (((SM_StatePtr)(me->curr))->init_ != (SM_InitHandler)0) {
-        target = (*(((SM_StatePtr)(me->curr))->init_))(me);
+    while (SM_STATE_CAST_(me->curr)->init_ != (SM_InitHandler)0) {
+        target = (*(SM_STATE_CAST_(me->curr)->init_))(me);
         SM_ENSURE(target != (SM_StatePtr)0);
         ip = -1;
         s = target;
         while (s != (SM_StatePtr)0 && s != me->curr) {
             SM_REQUIRE(ip < (SM_MAX_NEST_DEPTH_ - 1));
             path[++ip] = s;
-            s = ((SM_StatePtr)s)->super;
+            s = SM_STATE_CAST_(s)->super;
         }
         SM_ENSURE(s == me->curr);
         for (i = ip; i >= 0; --i) {
-            s = (SM_StatePtr)(path[i]);
+            s = SM_STATE_CAST_(path[i]);
             me->curr = s;
             if (s->entry_) {
                 (*s->entry_)(me);
@@ -88,13 +94,13 @@ void SM_Hsm_dispatch_(SM_Hsm * const me,
 
     SM_REQUIRE(s != (SM_StatePtr)0);
     while (s != (SM_StatePtr)0) {
-        ret = (*(((SM_StatePtr)(s))->handler_))(me, e);
+        ret = (*(SM_STATE_CAST_(s)->handler_))(me, e);
         switch (ret) {
             case SM_RET_HANDLED: {
                 return;
             }
             case SM_RET_SUPER: {
-                s = ((SM_StatePtr)(s))->super;
+                s = SM_STATE_CAST_(s)->super;
                 break;
             }
             case SM_RET_TRAN:
@@ -123,8 +129,8 @@ static void SM_Hsm_transition_(SM_Hsm * const me,
     bool bLCAFound;
 
     SM_REQUIRE(me != (SM_Hsm *)0);
-    SM_REQUIRE((SM_StatePtr)(source) != (SM_StatePtr)0);
-    SM_REQUIRE((SM_StatePtr)(target) != (SM_StatePtr)0);
+    SM_REQUIRE(SM_STATE_CAST_(source) != (SM_StatePtr)0);
+    SM_REQUIRE(SM_STATE_CAST_(target) != (SM_StatePtr)0);
 
     // Build entry path: target -> root.
     ip = -1;
@@ -132,42 +138,42 @@ static void SM_Hsm_transition_(SM_Hsm * const me,
     while (s != (SM_StatePtr)0) {
         SM_REQUIRE(ip < (SM_MAX_NEST_DEPTH_ - 1));
         path[++ip] = s;
-        s = ((SM_StatePtr)(s))->super;
+        s = SM_STATE_CAST_(s)->super;
     }
 
     // Exit curr -> source (exclusive).  Shared by all transition types.
     s = me->curr;
     while (s != source) {
         SM_REQUIRE(s != (SM_StatePtr)0);
-        if (((SM_StatePtr)(s))->exit_) {
-            (*(((SM_StatePtr)(s))->exit_))(me);
+        if (SM_STATE_CAST_(s)->exit_) {
+            (*(SM_STATE_CAST_(s)->exit_))(me);
         }
-        s = ((SM_StatePtr)s)->super;
+        s = SM_STATE_CAST_(s)->super;
     }
     // s == source
 
     // --- Simple transitions ---
     if (source == target) {
         // (a) Self-transition: exit source, enter from target->super down.
-        if (((SM_StatePtr)(source))->exit_) {
-            (*(((SM_StatePtr)(source))->exit_))(me);
+        if (SM_STATE_CAST_(source)->exit_) {
+            (*(SM_STATE_CAST_(source)->exit_))(me);
         }
         i = 1; // LCA is target->super.
-    } else if (source == ((SM_StatePtr)(target))->super) {
+    } else if (source == SM_STATE_CAST_(target)->super) {
         // (b) source is target's parent: no exit source, enter target.
         i = 1;
     } else if (
-        ((SM_StatePtr)(source))->super == ((SM_StatePtr)(target))->super
+        SM_STATE_CAST_(source)->super == SM_STATE_CAST_(target)->super
     ) {
         // (c) Same parent: exit source, enter target.
-        if (((SM_StatePtr)(source))->exit_) {
-            (*(((SM_StatePtr)(source))->exit_))(me);
+        if (SM_STATE_CAST_(source)->exit_) {
+            (*(SM_STATE_CAST_(source)->exit_))(me);
         }
         i = 1;
-    } else if (((SM_StatePtr)(source))->super == target) {
+    } else if (SM_STATE_CAST_(source)->super == target) {
         // (d) target is source's parent: exit source, no entry.
-        if (((SM_StatePtr)(source))->exit_) {
-            (*(((SM_StatePtr)(source))->exit_))(me);
+        if (SM_STATE_CAST_(source)->exit_) {
+            (*(SM_STATE_CAST_(source)->exit_))(me);
         }
         i = 0;
     } else {
@@ -185,36 +191,36 @@ static void SM_Hsm_transition_(SM_Hsm * const me,
             if (bLCAFound) {
                 break;
             }
-            if (((SM_StatePtr)(s))->exit_) {
-                (*(((SM_StatePtr)(s))->exit_))(me);
+            if (SM_STATE_CAST_(s)->exit_) {
+                (*(SM_STATE_CAST_(s)->exit_))(me);
             }
-            s = ((SM_StatePtr)s)->super;
+            s = SM_STATE_CAST_(s)->super;
         }
 
         SM_ENSURE(bLCAFound);
     }
 
     while (--i >= 0) {
-        s = ((SM_StatePtr)(path[i]));
+        s = SM_STATE_CAST_(path[i]);
         if (s->entry_) {
             (*s->entry_)(me);
         }
     }
 
     me->curr = target;
-    while (((SM_StatePtr)(me->curr))->init_ != (SM_InitHandler)0) {
-        target = (*(((SM_StatePtr)(me->curr))->init_))(me);
+    while (SM_STATE_CAST_(me->curr)->init_ != (SM_InitHandler)0) {
+        target = (*(SM_STATE_CAST_(me->curr)->init_))(me);
         SM_ENSURE(target != (SM_StatePtr)0);
         ip = -1;
         s = target;
         while (s != (SM_StatePtr)0 && s != me->curr) {
             SM_REQUIRE(ip < (SM_MAX_NEST_DEPTH_ - 1));
             path[++ip] = s;
-            s = ((SM_StatePtr)s)->super;
+            s = SM_STATE_CAST_(s)->super;
         }
         SM_ENSURE(s == me->curr);
         for (i = ip; i >= 0; --i) {
-            s = (SM_StatePtr)(path[i]);
+            s = SM_STATE_CAST_(path[i]);
             me->curr = s;
             if (s->entry_) {
                 (*s->entry_)(me);
@@ -237,11 +243,11 @@ SM_StatePtr SM_Hsm_childState_(SM_Hsm * const me,
     s = me->curr;
     child = (SM_StatePtr)0;
     while (s != (SM_StatePtr)0) {
-        if (((SM_StatePtr)s)->super == parent) {
+        if (SM_STATE_CAST_(s)->super == parent) {
             child = s;
             break;
         }
-        s = ((SM_StatePtr)s)->super;
+        s = SM_STATE_CAST_(s)->super;
     }
     SM_ENSURE(child != (SM_StatePtr)0);
 
