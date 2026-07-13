@@ -175,7 +175,7 @@ static void SmHsmTst_ctor(void) {
 static SM_StatePtr SmHsmTst_TOP_initial_(SM_Hsm * const me) SM_HSM_RETT {
     SmHsmTst *ao = container_of(me, SmHsmTst, sm_hsm_);
     ao->foo = false;
-    BSP_print("top-INIT::");
+    BSP_print("TOP-INIT::");
     // init history to default children
     ao->hist_s2  = &SmHsmTst_s21;
     ao->hist_s22 = &SmHsmTst_s221;
