@@ -200,11 +200,9 @@ static void SM_Hsm_transition_(SM_Hsm * const me,
             s = SM_STATE_CAST_(s)->super;
         }
 
-        // No runtime LCA check here. State-tree consistency is validated
-        // by the static checker (tools/check_hsm_tree.py or similar).
-        // Without that check, a transition between unrelated trees exits
-        // the entire source tree and entries the entire target tree,
-        // which is the intended behavior for top-level sibling states.
+        // NULL is the virtual TOP shared by all top-level states.
+        // If no concrete LCA is found, the virtual TOP is the LCA:
+        // exit the source branch and enter the target branch from its root.
     }
 
     while (--i >= 0) {
