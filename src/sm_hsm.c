@@ -110,8 +110,11 @@ void SM_Hsm_dispatch_(SM_Hsm * const me,
                 return;
             }
 
-            // Illegal return code from state handler.
-            SM_ERROR("Whip.");
+            default: {
+                // Illegal return code from state handler.
+                SM_ERROR("Whip.");
+                break;
+            }
         }
     }
 }
