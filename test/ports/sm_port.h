@@ -22,8 +22,8 @@
 //............................................................................
 #include <stddef.h> // offsetof
 #ifndef container_of
-    #define container_of(ptr_, type_, member_) \
-                        ((type_ *)((char *)(ptr_) - offsetof(type_, member_)))
+#define container_of(ptr_, type_, member_) \
+    ((type_ *)((char *)(ptr_) - offsetof(type_, member_)))
 #endif // container_of
 
 // SM_Tracer port. ===========================================================

@@ -16,15 +16,15 @@
 //! @cond INTERNAL
 
 #ifndef SMT_REET
-    #define SMT_REET
+#define SMT_REET
 #endif // SMT_REET
 
 #ifndef SMT_CRITICAL_SECTION_ENTRY
-    #define SMT_CRITICAL_SECTION_ENTRY() ((void)0)
+#define SMT_CRITICAL_SECTION_ENTRY() ((void)0)
 #endif // SMT_CRITICAL_SECTION_ENTRY
 
 #ifndef SMT_CRITICAL_SECTION_EXIT
-    #define SMT_CRITICAL_SECTION_EXIT() ((void)0)
+#define SMT_CRITICAL_SECTION_EXIT() ((void)0)
 #endif // SMT_CRITICAL_SECTION_EXIT
 
 //! @endcond
