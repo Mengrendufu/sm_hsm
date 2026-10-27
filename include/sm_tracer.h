@@ -74,6 +74,9 @@ void SM_Trace_push(SM_Tracer * const me, unsigned char *pfb) SMT_REET;
 //! @public @memberof SM_Tracer
 void SM_Tracer_idle(SM_Tracer * const me);
 
+//! @public @memberof SM_Tracer
+void SM_Tracer_escFlush(unsigned char byte_);
+
 //============================================================================
 //! @brief Macros in hand.
 //! @cond EXTERNAL

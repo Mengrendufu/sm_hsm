@@ -81,8 +81,8 @@ void SM_Tracer_ctor(SM_Tracer * const me,
 #define SM_TRACER_IS_ESC_(byte_)  (((byte_) == 0x7E) || ((byte_) == 0x7D))
 
 //............................................................................
-//! @static @public @memberof SM_Tracer
-static void SM_Tracer_escFlush_(unsigned char byte_) {
+//! @public @memberof SM_Tracer
+void SM_Tracer_escFlush(unsigned char byte_) {
     if (SM_TRACER_IS_ESC_(byte_)) {
         SM_Tracer_flushByte_(0x7D);
         SM_Tracer_flushByte_(0x20 ^ byte_);
@@ -185,18 +185,18 @@ void SM_Tracer_idle(SM_Tracer * const me) {
             SM_Tracer_flushByte_(0x7E);
             me->chksumIter = 0;
             me->chksumIter += me->traceSeq++;
-            SM_Tracer_escFlush_(me->chksumIter);
+            SM_Tracer_escFlush(me->chksumIter);
 
             // RecID...
             me->chksumIter += me->currBuf[me->currLen - me->currCnt--];
-            SM_Tracer_escFlush_(me->currBuf[me->currLen - me->currCnt - 1]);
+            SM_Tracer_escFlush(me->currBuf[me->currLen - me->currCnt - 1]);
         } else {
             SMT_CRITICAL_SECTION_EXIT();
         }
     } else {
         if (me->currCnt == 0) {
             // [CHKSUM] [0x7E].
-            SM_Tracer_escFlush_(~(me->chksumIter));
+            SM_Tracer_escFlush(~(me->chksumIter));
             SM_Tracer_flushByte_(0x7E);
 
             SMT_CRITICAL_SECTION_ENTRY();
@@ -211,7 +211,7 @@ void SM_Tracer_idle(SM_Tracer * const me) {
         } else {
             // [pLen] [payload]...
             me->chksumIter += me->currBuf[me->currLen - me->currCnt--];
-            SM_Tracer_escFlush_(me->currBuf[me->currLen - me->currCnt - 1]);
+            SM_Tracer_escFlush(me->currBuf[me->currLen - me->currCnt - 1]);
         }
     }
 }
