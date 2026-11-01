@@ -135,14 +135,7 @@ static void SM_Hsm_transition_(SM_Hsm * const me,
     SM_REQUIRE(SM_STATE_CAST_(source) != (SM_StatePtr)0);
     SM_REQUIRE(SM_STATE_CAST_(target) != (SM_StatePtr)0);
 
-    // Build entry path: target -> root.
-    ip = -1;
-    s = target;
-    while (s != (SM_StatePtr)0) {
-        SM_REQUIRE(ip < (SM_MAX_NEST_DEPTH_ - 1));
-        path[++ip] = s;
-        s = SM_STATE_CAST_(s)->super;
-    }
+    path[0] = target;
 
     // Exit curr -> source (exclusive).  Shared by all transition types.
     s = me->curr;
@@ -181,6 +174,15 @@ static void SM_Hsm_transition_(SM_Hsm * const me,
         i = 0;
     } else {
         // --- Complex transition ---
+        // Build the remaining entry path only for LCA search.
+        ip = 0;
+        s = SM_STATE_CAST_(target)->super;
+        while (s != (SM_StatePtr)0) {
+            SM_REQUIRE(ip < (SM_MAX_NEST_DEPTH_ - 1));
+            path[++ip] = s;
+            s = SM_STATE_CAST_(s)->super;
+        }
+        s = source;
         bLCAFound = false;
 
         // Search LCA upwards from source.

@@ -424,7 +424,7 @@ static SM_RetState SmHsmTst_s222_(SM_Hsm * const me, SmHsmTstEvt const * const e
 //..........................................................................
 // Expected output for sequence  A B C D E E F G H I J K L I M N O P N :
 //
-//  top-INIT::s1-ENTRY.s1-INIT.s11-ENTRY.
+//  TOP-INIT::s1-ENTRY.s1-INIT.s11-ENTRY.
 //  s1-A    ::s11-EXIT.s1-EXIT.s2-ENTRY.s2-INIT.s22-ENTRY.s221-ENTRY.
 //  s221-B  ::s221-EXIT.s221-ENTRY.
 //  s221-C  ::s221-EXIT.s22-INIT.s221-ENTRY.
